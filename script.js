@@ -7,6 +7,7 @@
  * 2. Logika autentikasi admin masih di sisi klien (insecure).
  * 3. Fungsi updateKingNameAdmin() telah DITAMBAHKAN/DIPERBAIKI.
  * 4. Teks judul telah diubah sesuai permintaan pengguna.
+ * 5. PERBAIKAN KRITIS: renderStatus() dan initialLoad() diupdate agar KingName dan Status dimuat saat startup.
  * =========================================================
  */
 
@@ -67,25 +68,55 @@ function initialLoad() {
     updateServerTime();
     setInterval(updateServerTime, 1000); // Mulai update waktu
     
+    // *** PERBAIKAN KRITIS: Panggil fungsi rendering data setelah load data ***
+    renderStatus(); 
+    renderPostings();
+    renderRanks();
+    renderMigrationList('public');
+    renderBuffList('public');
+    // ***********************************************************************
+    
     // Tampilkan bagian yang terakhir dilihat atau default ke 'beranda'
     const activeSection = loadData('activeSection', 'beranda');
     showSection(activeSection); 
 }
 
+/**
+ * PERBAIKAN KRITIS: Menargetkan ID DOM yang benar di header dan halaman.
+ */
 function renderStatus() {
-    // Fungsi dummy yang akan dipanggil oleh Admin Tools untuk refresh status war/mig/event
-    document.getElementById('warStatusContent').textContent = statusData.warStatus;
-    document.getElementById('migStatusContent').textContent = statusData.migStatus;
-    document.getElementById('currentEventName').textContent = statusData.eventName;
-    document.getElementById('currentEventStatus').textContent = statusData.eventStatus;
-    document.getElementById('eventNoteContent').textContent = statusData.eventNote;
-    document.getElementById('kingNameDisplay').textContent = (translations[currentLang]['king_name_prefix'] || "Raja:") + " " + statusData.kingName;
+    // Update status WAR (di Beranda)
+    const warStatusElement = document.getElementById('currentWarStatus');
+    if (warStatusElement) warStatusElement.textContent = statusData.warStatus;
+    
+    // Update status MIGRASI (di Beranda)
+    const migStatusElement = document.getElementById('currentMigStatus');
+    if (migStatusElement) migStatusElement.textContent = statusData.migStatus;
+    
+    // Update Event
+    const eventNameElement = document.getElementById('currentEventName');
+    if (eventNameElement) eventNameElement.textContent = statusData.eventName;
+    
+    const eventStatusElement = document.getElementById('currentEventStatus');
+    if (eventStatusElement) eventStatusElement.textContent = statusData.eventStatus;
+
+    // Update Catatan Event
+    const eventNoteElement = document.getElementById('eventNoteContent'); // ID ini seharusnya ada di tab Events
+    if (eventNoteElement) eventNoteElement.textContent = statusData.eventNote; 
+
+    // KRITIS: Update NAMA RAJA di Header
+    const kingDisplayElement = document.getElementById('kingNameDisplay');
+    if (kingDisplayElement) {
+        // Cukup set textContent ke nama raja yang disimpan. Prefix "Raja:" ada di HTML.
+        kingDisplayElement.textContent = statusData.kingName; 
+    }
+    
     // Panggil renderServerInfo untuk update KvK schedule
     renderServerInfo();
 }
 
 // Tambahkan event listener untuk memuat data setelah DOM siap
-// document.addEventListener('DOMContentLoaded', initialLoad); 
+// document.addEventListener('DOMContentLoaded', initialLoad); // Sudah dipindah ke bagian paling bawah
 
 
 // --- FUNGSI RENDERING UTAMA ---
@@ -1110,6 +1141,7 @@ function changeLanguage(langCode) {
         document.querySelectorAll('[data-lang-key]').forEach(translateElement);
         
         // Perlu memuat ulang konten dinamis
+        renderStatus(); // Agar King Name/Status diperbarui
         renderPostings();
         renderRanks();
         renderMigrationList('public');
