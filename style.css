@@ -549,3 +549,33 @@ input:focus, textarea:focus, select:focus {
         display: table; 
     }
 }
+
+
+/* --- FIX: Responsif YouTube Embed --- */
+
+/* 1. Container utama yang menjaga rasio aspek (16:9) */
+.video-responsive-container {
+    position: relative; 
+    padding-bottom: 56.25%; /* Rasio 16:9 untuk video standar */
+    padding-top: 30px; 
+    height: 0;
+    overflow: hidden; 
+    margin-bottom: 20px; 
+    max-width: 100%; 
+}
+
+/* 2. Menetapkan iframe (video) agar mengisi 100% container */
+.video-responsive-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; 
+    height: 100%; 
+}
+
+/* FIX TAMBAHAN: Memastikan gambar atau media lain di postingan juga responsif */
+.post-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+}

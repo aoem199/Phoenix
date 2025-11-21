@@ -8,6 +8,7 @@
  * 3. Fungsi updateKingNameAdmin() telah DITAMBAHKAN/DIPERBAIKI.
  * 4. Teks judul telah diubah sesuai permintaan pengguna.
  * 5. PERBAIKAN KRITIS: renderStatus() dan initialLoad() diupdate agar KingName dan Status dimuat saat startup.
+ * 6. PERBAIKAN KRITIS: renderAdminPostList() diperbaiki untuk mengembalikan tombol Hapus dan Edit.
  * =========================================================
  */
 
@@ -508,6 +509,7 @@ const translations = {
         msg_info_update: "Info Server berhasil disimpan.",
         msg_rank_added: "Entri peringkat berhasil ditambahkan.",
         msg_clear_buff_confirm: "APAKAH ANDA YAKIN INGIN MENGHAPUS SEMUA DAFTAR PERMINTAAN BUFF? Tindakan ini tidak dapat dibatalkan.",
+        msg_post_edit: "Simpan Perubahan", // Tambahkan terjemahan untuk tombol Edit
     },
     // English
     'en': {
@@ -630,6 +632,7 @@ const translations = {
         msg_info_update: "Server Info successfully saved.",
         msg_rank_added: "Rank entry successfully added.",
         msg_clear_buff_confirm: "ARE YOU SURE YOU WANT TO DELETE ALL BUFF REQUESTS? This action cannot be undone.",
+        msg_post_edit: "Save Changes", // Tambahkan terjemahan untuk tombol Edit
     },
     // Spanyol (Contoh Sederhana)
     'es': {
@@ -752,6 +755,7 @@ const translations = {
         msg_info_update: "Información del Servidor guardada con éxito.",
         msg_rank_added: "Entrada de clasificación añadida con éxito.",
         msg_clear_buff_confirm: "¿ESTÁ SEGURO DE QUE DESEA BORRAR TODAS LAS SOLICITUDES DE BUFF? Esta acción no se puede deshacer.",
+        msg_post_edit: "Guardar Cambios", // Tambahkan terjemahan untuk tombol Edit
     },
     // Jerman (Contoh Sederhana)
     'de': {
@@ -874,6 +878,7 @@ const translations = {
         msg_info_update: "Server-Info erfolgreich gespeichert.",
         msg_rank_added: "Ranglisteneintrag erfolgreich hinzugefügt.",
         msg_clear_buff_confirm: "SIND SIE SICHER, DASS SIE ALLE BUFF-ANFRAGEN LÖSCHEN MÖCHTEN? Diese Aktion kann nicht rückgängig gemacht werden.",
+        msg_post_edit: "Änderungen speichern", // Tambahkan terjemahan untuk tombol Edit
     },
     // Chinese (Mandarin/Sederhana)
     'zh': {
@@ -995,6 +1000,7 @@ const translations = {
         msg_info_update: "服务器信息保存成功。",
         msg_rank_added: "排名条目添加成功。",
         msg_clear_buff_confirm: "您确定要删除所有增益请求吗？此操作无法撤消。",
+        msg_post_edit: "保存更改", // Tambahkan terjemahan untuk tombol Edit
     },
     // Japanese
     'ja': {
@@ -1099,7 +1105,7 @@ const translations = {
         adm_btn_save: "スケジュールを保存",
         adm_king_title: "8. 国王名を編集",
         adm_king_label: "現行の国王名:",
-        adm_btn_save_king: "国王名を保存", // *PERBAIKAN: Tombol King*
+        adm_btn_save_king: "国王名を保存", // *PERBAIKAN: トンボル King*
         footer_text: "© 2025 AOEM 199 by HADES", // DIUBAH
         msg_mig_success: "移住登録が正常に送信されました。ありがとうございます！",
         msg_buff_success: "バフ申請が正常に送信されました。R4/R5の確認をお待ちください！",
@@ -1116,6 +1122,7 @@ const translations = {
         msg_info_update: "サーバー情報が正常に保存されました。",
         msg_rank_added: "ランキングエントリが正常に追加されました。",
         msg_clear_buff_confirm: "すべてのバフ申請を削除してもよろしいですか？この操作は元に戻せません。",
+        msg_post_edit: "変更を保存", // Tambahkan terjemahan untuk tombol Edit
     },
     // Tambahkan terjemahan untuk RU di sini jika diperlukan
 };
@@ -1309,7 +1316,9 @@ function renderAdminTools() {
 }
 
 // --- ADMIN POSTING FUNCTIONS ---
-// --- MODIFIKASI: HANYA TAMPILKAN JUDUL & SEDIKIT KONTEN DI ADMIN LIST ---
+/**
+ * PERBAIKAN KRITIS: Mengembalikan tombol Edit dan Hapus yang hilang.
+ */
 function renderAdminPostList() {
     const listContainer = document.getElementById('adminPostList');
     if (!listContainer) return;
@@ -1325,13 +1334,32 @@ function renderAdminPostList() {
         item.innerHTML = `
             <h4>${post.title}</h4>
             <div style="font-size: 0.9em; margin-bottom: 10px; color: #bdc3c7;">${contentPreview.replace(/\n/g, '<br>')}</div>
-            <button class="btn btn-secondary" onclick="editPost(${index})">${translations[currentLang]['adm_btn_cancel'] || "Edit"}</button>
-            <button class="btn btn-danger" onclick="deleteEntry('postings', ${index})">${translations[currentLang]['tbl_action'] || "Hapus"}</button>
         `;
+        
+        // --- START PERBAIKAN: Tambahkan tombol Edit dan Hapus ---
+        const btnContainer = document.createElement('div');
+        btnContainer.style.marginTop = '10px';
+        
+        const editBtn = document.createElement('button');
+        editBtn.className = 'btn btn-secondary';
+        editBtn.textContent = translations[currentLang]['adm_btn_cancel'] || "Edit"; // Akan diganti oleh terjemahan "Edit" jika ada
+        editBtn.onclick = () => editPost(index);
+        
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn btn-danger';
+        deleteBtn.textContent = translations[currentLang]['tbl_action'] || "Hapus";
+        deleteBtn.onclick = () => deleteEntry('postings', index);
+        deleteBtn.style.marginLeft = '10px'; // Tambahkan jarak
+        
+        btnContainer.appendChild(editBtn);
+        btnContainer.appendChild(deleteBtn);
+        item.appendChild(btnContainer);
+        // --- END PERBAIKAN ---
+
         listContainer.appendChild(item);
     });
 }
-// --- AKHIR MODIFIKASI renderAdminPostList ---
+// --- AKHIR PERBAIKAN renderAdminPostList ---
 
 function submitAdminPost() {
     // postTitle di admin form sekarang disembunyikan dan di-set default value,
@@ -1390,7 +1418,7 @@ function editPost(index) {
     if (postContentInput) postContentInput.value = post.content;
     if (postIdToEditInput) postIdToEditInput.value = index;
     
-    if (postSubmitBtn) postSubmitBtn.textContent = translations[currentLang]['adm_btn_save'] || "Simpan Perubahan"; // Set manually for clarity
+    if (postSubmitBtn) postSubmitBtn.textContent = translations[currentLang]['msg_post_edit'] || "Simpan Perubahan"; // Menggunakan terjemahan baru
     if (cancelEditBtn) cancelEditBtn.classList.remove('hidden');
     scrollToTop();
 }
