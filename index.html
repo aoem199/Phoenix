@@ -1,2942 +1,355 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-lang-key="page_title">AoEM Server 199 Community Site</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #4a90e2; /* Blue */
-            --secondary-color: #50e3c2; /* Teal */
-            --bg-color: #1a1a2e; /* Dark Blue/Purple */
-            --card-bg: #22223b; /* Slightly lighter dark */
-            --text-color: #e5e5e5; /* Light Gray */
-            --danger-color: #ff4136; /* Red */
-            --safe-color: #2ecc40; /* Green */
-            --warning-color: #ffc107; /* Yellow */
-            --border-color: #3f3e53;
-            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            --admin-bg: #3f3f3f;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AOEM S199 — Admin Control Panel</title>
 
-        body {
-            font-family: var(--font-family);
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding-top: 60px; /* Space for fixed header */
-            line-height: 1.6;
-        }
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-        a {
-            color: var(--secondary-color);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        a:hover {
-            color: var(--primary-color);
-        }
-
-        /* --- Header & Navigation --- */
-        .header {
-            background-color: #161625;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        .logo {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: var(--text-color);
-        }
-
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .nav-menu li {
-            margin-left: 15px;
-        }
-
-        .nav-menu a {
-            color: var(--text-color);
-            padding: 8px 12px;
-            border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
-            display: block;
-        }
-
-        .nav-menu a:hover,
-        .nav-menu a.active {
-            background-color: var(--primary-color);
-            color: var(--text-color);
-        }
-
-        /* Language Selector */
-        .lang-container {
-            position: relative;
-        }
-
-        .lang-button, #currentLangBtn {
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-left: 15px;
-            font-weight: bold;
-        }
-        
-        #currentLangBtn {
-             background-color: var(--primary-color);
-        }
-
-        #langDropdown {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            overflow: hidden;
-            margin-top: 5px;
-            z-index: 100;
-        }
-
-        #langDropdown button {
-            display: block;
-            width: 100%;
-            padding: 8px 15px;
-            background: none;
-            border: none;
-            color: var(--text-color);
-            text-align: left;
-            cursor: pointer;
-        }
-
-        #langDropdown button:hover {
-            background-color: var(--primary-color);
-        }
-
-        /* Burger Menu for Mobile */
-        .menu-toggle {
-            display: none;
-            font-size: 1.5em;
-            cursor: pointer;
-            margin-left: 15px;
-        }
-
-        /* --- Main Content --- */
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
-
-        .content-section {
-            padding: 20px 0;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        h2 {
-            color: var(--secondary-color);
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 10px;
-            margin-top: 0;
-        }
-
-        h3, h4 {
-            color: var(--primary-color);
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-        
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        /* --- Status & King --- */
-        .status-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 10px;
-            background-color: #282845;
-            border-radius: 8px;
-        }
-
-        .king-info {
-            font-size: 1.2em;
-        }
-
-        .status-box {
-            padding: 10px;
-            border-radius: 5px;
-            flex-grow: 1;
-            margin-left: 10px;
-        }
-
-        .status-box p {
-            margin: 5px 0;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .status-label {
-            font-size: 0.9em;
-            color: var(--secondary-color);
-        }
-        
-        /* --- Status Coloring --- */
-        #warStatusP, #migrationStatusP, #migrationStatusP2 {
-            padding-left: 10px;
-        }
-
-        /* --- Posts --- */
-        .post-item {
-            border: 1px solid var(--border-color);
-            padding: 15px;
-            border-radius: 6px;
-            margin-top: 15px;
-            background-color: var(--card-bg);
-        }
-
-        .post-meta {
-            font-size: 0.8em;
-            color: #aaa;
-            margin-top: 10px;
-            border-top: 1px dashed var(--border-color);
-            padding-top: 5px;
-        }
-        
-        .post-content img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
-            margin-top: 10px;
-        }
-
-        .video-responsive-container {
-            overflow: hidden;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
-            position: relative;
-            height: 0;
-            margin-top: 15px;
-        }
-
-        .video-responsive-container iframe {
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 100%;
-            position: absolute;
-            border-radius: 4px;
-        }
-
-        /* --- Forms & Tables --- */
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .form-group input[type="text"],
-        .form-group input[type="number"],
-        .form-group input[type="password"],
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            background-color: #3f3e53;
-            color: var(--text-color);
-            box-sizing: border-box;
-        }
-        
-        .data-table-container {
-            overflow-x: auto;
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        .data-table th, .data-table td {
-            border: 1px solid var(--border-color);
-            padding: 10px;
-            text-align: left;
-        }
-
-        .data-table th {
-            background-color: var(--primary-color);
-            color: var(--text-color);
-            text-transform: uppercase;
-            font-size: 0.9em;
-        }
-
-        .data-table tr:nth-child(even) {
-            background-color: #282845;
-        }
-        
-        .data-table tr:hover {
-            background-color: #3f3e53;
-        }
-        
-        .note {
-            font-style: italic;
-            color: #aaa;
-            padding: 10px;
-        }
-
-        .btn {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: var(--text-color);
-        }
-
-        .btn-primary:hover {
-            background-color: #3f7bbf;
-        }
-        
-        .btn-secondary {
-            background-color: var(--secondary-color);
-            color: #1a1a2e;
-        }
-
-        .btn-secondary:hover {
-            background-color: #3fe2c5;
-        }
-
-        .btn-danger {
-            background-color: var(--danger-color);
-            color: var(--text-color);
-        }
-
-        .btn-danger:hover {
-            background-color: #cc332a;
-        }
-        
-        .btn-warning {
-            background-color: var(--warning-color);
-            color: #1a1a2e;
-        }
-
-        .btn-warning:hover {
-            background-color: #e5af07;
-        }
-        
-        /* Admin specific styles */
-        .admin-section {
-            background-color: var(--admin-bg);
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-        
-        .admin-rank-table input {
-            padding: 5px;
-            font-size: 0.9em;
-            background-color: #4a4a6b;
-            border: 1px solid #6c6c8c;
-            color: var(--text-color);
-        }
-        
-        .admin-rank-table .admin-rank-no { width: 30px; }
-        .admin-rank-table .admin-rank-name { width: 100px; }
-        .admin-rank-table .admin-rank-alliance { width: 80px; }
-        .admin-rank-table .admin-rank-value { width: 60px; }
-
-        .admin-actions {
-            margin-top: 15px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .admin-delete-all {
-            margin-top: 30px;
-            padding: 20px;
-            border: 2px dashed var(--danger-color);
-            background-color: #331f1f;
-            text-align: center;
-        }
-
-        /* Scroll To Top Button */
-        #scrollToTopBtn {
-            display: none;
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 99;
-            border: none;
-            outline: none;
-            background-color: var(--primary-color);
-            color: white;
-            cursor: pointer;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 18px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        #scrollToTopBtn:hover {
-            background-color: #3f7bbf;
-        }
-
-        /* Footer */
-        .footer {
-            background-color: #161625;
-            color: #aaa;
-            text-align: center;
-            padding: 15px;
-            margin-top: 40px;
-        }
-
-        /* --- Media Queries for Responsiveness --- */
-        @media (max-width: 900px) {
-            .grid-3 {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .nav-menu {
-                flex-direction: column;
-                position: absolute;
-                top: 60px; 
-                left: 0;
-                width: 100%;
-                background-color: #161625;
-                box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
-                max-height: 0;
-                overflow: hidden;
-                transition: max-height 0.3s ease-in-out;
-            }
-
-            .nav-menu.active {
-                max-height: 500px; /* Adjust based on menu size */
-            }
-
-            .nav-menu li {
-                margin: 0;
-                border-top: 1px solid var(--border-color);
-            }
-
-            .nav-menu a {
-                padding: 15px 20px;
-                border-radius: 0;
-            }
-            
-            .menu-toggle {
-                display: block;
-            }
-
-            .header {
-                padding: 10px;
-            }
-            
-            .lang-button {
-                margin-left: 0;
-            }
-
-            .status-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .king-info {
-                margin-bottom: 10px;
-            }
-
-            .status-box {
-                width: 100%;
-                margin-left: 0;
-                margin-top: 10px;
-            }
-        }
-    </style>
+  <!-- Firebase (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 </head>
 <body>
 
-    <div class="header">
-        <div class="logo" data-lang-key="hub_title">AOEM S199</div>
-        <div style="display: flex; align-items: center;">
-            <div class="lang-container">
-                <button id="currentLangBtn" onclick="toggleLangMenu(event)">ID</button>
-                <div id="langDropdown" class="hidden">
-                    <button onclick="changeLanguage('id')">ID</button>
-                    <button onclick="changeLanguage('en')">EN</button>
-                    <button onclick="changeLanguage('es')">ES</button>
-                    <button onclick="changeLanguage('de')">DE</button>
-                    <button onclick="changeLanguage('zh')">ZH</button>
-                    <button onclick="changeLanguage('ja')">JA</button>
-                    <button onclick="changeLanguage('ru')">RU</button>
-                    <button onclick="changeLanguage('ko')">KO</button>
-                </div>
-            </div>
-            <div class="menu-toggle" onclick="toggleMenu()">
-                <i id="menuIcon" class="fas fa-bars"></i>
-            </div>
-        </div>
-        <ul class="nav-menu" id="navMenu">
-            <li><a href="#beranda" onclick="showSection('beranda', event)" data-lang-key="menu_home">Beranda</a></li>
-            <li><a href="#ranks" onclick="showSection('ranks', event)" data-lang-key="menu_ranks">Peringkat</a></li>
-            <li><a href="#events" onclick="showSection('events', event)" data-lang-key="menu_events">Events</a></li>
-            <li><a href="#info" onclick="showSection('info', event)" data-lang-key="menu_info">Info Server</a></li>
-            <li><a href="#migrasi" onclick="showSection('migrasi', event)" data-lang-key="menu_migration">Pendaftar Migrasi</a></li>
-            <li id="loginAdminTab"><a href="#login" onclick="showSection('login', event)" data-lang-key="menu_login">Login Admin</a></li>
-            <li id="adminToolsTab" class="hidden"><a href="#admin" onclick="showSection('admin', event)" data-lang-key="menu_admin">Admin Tools</a></li>
-        </ul>
+  <div class="smoke"></div>
+  <div class="embers" aria-hidden="true"></div>
+
+  <!-- Confirm Modal -->
+  <div id="confirmModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <h3>Konfirmasi</h3>
+      <p id="confirmText">Apakah Anda yakin ingin menghapus?</p>
+      <div class="modal-actions">
+        <button id="confirmYes" class="btn-danger">Ya</button>
+        <button id="confirmNo" class="btn-secondary" onclick="closeConfirm()">Batal</button>
+      </div>
     </div>
+  </div>
 
-    <div class="container">
-
-        <div class="status-header">
-            <div class="king-info">
-                <span class="king-prefix" data-lang-key="king_name_prefix">Raja:</span> <strong id="kingNameDisplay">Nama Raja Belum Ditetapkan</strong> 
-                <span style="margin-left: 15px; color: var(--secondary-color); font-size: 0.9em;">[Server Time: <span id="serverTime">00:00:00 UTC</span>]</span>
-            </div>
-            <div style="display: flex; gap: 10px; width: 100%; max-width: 400px; margin-top: 10px;">
-                <div class="status-box" id="warStatusP">
-                    <p><span class="status-label" data-lang-key="status_war_title">STATUS SERVER WAR</span> <span id="currentWarStatus">PVE</span></p>
-                </div>
-                <div class="status-box" id="migrationStatusP">
-                    <p><span class="status-label" data-lang-key="mig_status_card">Status Penerimaan Migrasi S199</span> <span id="currentMigStatus">BUKA</span></p>
-                </div>
-            </div>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-box">
+      <div class="header-left">
+        <img id="headerLogo" class="header-logo" src="" alt="Logo">
+        <div>
+          <h1>AOEM S199</h1>
+          <div class="king-name">Raja: <span id="kingNameDisplay">Belum Ditentukan</span></div>
         </div>
-        
-        <div id="beranda" class="content-section">
-            <h2 data-lang-key="home_title">👑 Beranda & Postingan Terbaru</h2>
-            <div class="grid-3">
-                <div class="card" style="grid-column: 1 / -1;">
-                    <h3 data-lang-key="mig_form_title">🐦‍🔥 Formulir Pendaftaran Migrasi ke S199</h3>
-                    <p class="note" data-lang-key="mig_form_note">Silakan isi data Anda di bawah ini jika berminat migrasi.</p>
-                    <form id="migrationForm">
-                        <div class="form-group">
-                            <label for="migName" data-lang-key="mig_name">Nama Pemain/In-Game Name:</label>
-                            <input type="text" id="migName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="migServer" data-lang-key="mig_server">Server Asal:</label>
-                            <input type="text" id="migServer" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="migPower" data-lang-key="mig_power">Total Power (Juta):</label>
-                            <input type="number" id="migPower" required step="0.1" min="0">
-                        </div>
-                        <div class="form-group">
-                            <label for="migContact" data-lang-key="mig_contact">Kontak (Discord/Telegram):</label>
-                            <input type="text" id="migContact" required>
-                        </div>
-                        <input type="submit" class="btn btn-primary" data-lang-key="mig_submit" value="Kirim Pendaftaran Migrasi">
-                    </form>
-                </div>
-            </div>
-            
-            <h3>Postingan Komunitas</h3>
-            <div id="postingsWrapper">
-                <p class="note" data-lang-key="post_loading">Memuat postingan...</p>
-            </div>
-        </div>
+      </div>
 
-        <div id="ranks" class="content-section hidden">
-            <h2 data-lang-key="ranks_title">📈 Peringkat Pemain (Power & Merit)</h2>
-            <div class="grid-3">
-                <div class="card">
-                    <h3 data-lang-key="ranks_power_card">Power Ranking TOP 5 (Display Power)</h3>
-                    <div class="data-table-container">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th data-lang-key="tbl_no">#</th>
-                                    <th data-lang-key="tbl_player">Pemain</th>
-                                    <th data-lang-key="tbl_alliance">Aliansi</th>
-                                    <th data-lang-key="tbl_power">Power</th>
-                                    <th data-lang-key="tbl_notes">Keterangan</th>
-                                </tr>
-                            </thead>
-                            <tbody id="powerRankBody">
-                                </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="card">
-                    <h3 data-lang-key="ranks_merit_card">Merit Ranking TOP 5 (Display Merit)</h3>
-                    <div class="data-table-container">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th data-lang-key="tbl_no">#</th>
-                                    <th data-lang-key="tbl_player">Pemain</th>
-                                    <th data-lang-key="tbl_alliance">Aliansi</th>
-                                    <th data-lang-key="tbl_merit">Merit</th>
-                                    <th data-lang-key="tbl_notes">Keterangan</th>
-                                </tr>
-                            </thead>
-                            <tbody id="meritRankBody">
-                                </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <div class="header-right">
+        <div id="serverTime" class="server-time">UTC --:--:--</div>
+        <button class="menu-btn" onclick="toggleMenu()"><i id="menuIcon" class="fa-solid fa-bars"></i></button>
+      </div>
+    </div>
+  </header>
 
-        <div id="events" class="content-section hidden">
-            <h2 data-lang-key="events_title">⏳ Status Event Global</h2>
-            <div class="grid-3">
-                <div class="card">
-                    <h3 data-lang-key="events_current_card">Event Sedang Berlangsung</h3>
-                    <p><span class="status-label" data-lang-key="adm_status_event_name">Nama Event Aktif:</span> <strong id="currentEventName">Nama Event Aktif</strong></p>
-                    <p><span class="status-label" data-lang-key="status_label_current">Status:</span> <strong id="currentEventStatus">SELESAI</strong></p>
-                    <p><span class="status-label" data-lang-key="adm_status_event_note">Catatan / Detail Tambahan:</span> <span id="currentEventNote">Info terakhir: ---</span></p>
-                </div>
-                <div class="card" style="grid-column: 2 / -1;">
-                    <h3 data-lang-key="events_kvk_card">Jadwal Perang</h3>
-                    <div id="kvkScheduleContent">Jadwal Perang.</div>
-                </div>
-            </div>
-        </div>
+  <!-- Nav -->
+  <nav class="nav-area">
+    <ul id="navMenu" class="nav-list">
+      <li><button onclick="switchTab('home')">🏠 Home</button></li>
+      <li><button onclick="switchTab('ranks')">📊 Ranks</button></li>
+      <li><button onclick="switchTab('events')">⏳ Events</button></li>
+      <li><button onclick="switchTab('info')">🌐 Info</button></li>
+      <li><button onclick="switchTab('migration')">✈️ Migrasi</button></li>
+      <li><button onclick="switchTab('login')">🔑 Admin</button></li>
+      <li><button id="adminTab" class="hidden" onclick="switchTab('admin')">🛠️ Admin</button></li>
+    </ul>
+  </nav>
 
-        <div id="info" class="content-section hidden">
-            <h2 data-lang-key="info_title">🌐 Info Server 199</h2>
-            <div class="grid-3">
-                <div class="card">
-                    <h3 data-lang-key="info_alliance_card">Informasi Aliansi Utama</h3>
-                    <div id="allianceInfoContent">Tidak ada info aliansi.</div>
-                </div>
-                <div class="card">
-                    <h3 data-lang-key="info_rules_card">Peraturan Server</h3>
-                    <div id="rulesInfoContent">Tidak ada peraturan server.</div>
-                </div>
-            </div>
-        </div>
+  <!-- Main -->
+  <main class="container main-content">
 
-        <div id="migrasi" class="content-section hidden">
-            <h2 data-lang-key="mig_status_title">✈️ Status Pendaftar Migrasi ke Server 199</h2>
-            <div class="card" id="migrationStatusP2">
-                 <p><span class="status-label" data-lang-key="mig_status_card">Status Penerimaan Migrasi S199</span> <strong id="currentMigStatus2">BUKA</strong></p>
+    <!-- HOME -->
+    <section id="home" class="page-section">
+      <h2>📢 Postingan Terbaru</h2>
+
+      <div class="status-grid">
+        <div class="card">
+          <h3>Status War</h3>
+          <div class="status-item"><span>Status:</span><span id="warStatus">PVE</span></div>
+        </div>
+        <div class="card">
+          <h3>Status Migrasi</h3>
+          <div class="status-item"><span>Status:</span><span id="migStatus">-</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Highlight</h3>
+        <div id="postSlider" class="post-slider">
+          <button class="slider-btn left" onclick="sliderPrev()">‹</button>
+          <div class="slider-track" id="sliderTrack"></div>
+          <button class="slider-btn right" onclick="sliderNext()">›</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div id="postList">Memuat posting...</div>
+      </div>
+
+      <div class="card">
+        <h3>Form Pendaftaran Migrasi</h3>
+        <form id="migForm">
+          <label>Nama:</label><input type="text" id="migName" required>
+          <label>Server asal:</label><input type="text" id="migServer" required>
+          <label>Power (angka):</label><input type="number" id="migPower" required>
+          <label>Kontak:</label><input type="text" id="migContact" required>
+          <button class="btn-primary" type="submit">Kirim</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- RANKS -->
+    <section id="ranks" class="page-section hidden">
+      <h2>📊 Ranking</h2>
+      <div class="card">
+        <h3>Power Ranking</h3>
+        <table class="data-table"><thead><tr><th>#</th><th>Nama</th><th>Aliansi</th><th>Power</th></tr></thead><tbody id="powerList"></tbody></table>
+      </div>
+
+      <div class="card">
+        <h3>Merit Ranking</h3>
+        <table class="data-table"><thead><tr><th>#</th><th>Nama</th><th>Aliansi</th><th>Merit</th></tr></thead><tbody id="meritList"></tbody></table>
+      </div>
+    </section>
+
+    <!-- EVENTS -->
+    <section id="events" class="page-section hidden">
+      <h2>⏳ Event Global</h2>
+      <div class="card">
+        <h3>Status Event</h3>
+        <p><b>Event:</b> <span id="eventName">-</span></p>
+        <p><b>Status:</b> <span id="eventStatus">-</span></p>
+        <p id="eventNote">-</p>
+      </div>
+      <div class="card"><h3>Jadwal KvK</h3><div id="kvkSchedule">-</div></div>
+    </section>
+
+    <!-- INFO -->
+    <section id="info" class="page-section hidden">
+      <h2>🌐 Info Server</h2>
+      <div class="card"><h3>Info Aliansi</h3><div id="allianceInfo">-</div></div>
+      <div class="card"><h3>Peraturan</h3><div id="rulesInfo">-</div></div>
+    </section>
+
+    <!-- MIGRATION PUBLIC -->
+    <section id="migration" class="page-section hidden">
+      <h2>✈️ Daftar Pendaftar Migrasi</h2>
+      <div class="card">
+        <table class="data-table">
+          <thead><tr><th>#</th><th>Nama</th><th>Server</th><th>Power</th><th>Tanggal</th></tr></thead>
+          <tbody id="migTablePublic"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- LOGIN ADMIN -->
+    <section id="login" class="page-section hidden">
+      <h2>🔑 Login Admin</h2>
+      <div class="card">
+        <form onsubmit="event.preventDefault(); adminLogin();">
+          <label>Email Admin:</label><input type="email" id="adminEmail" required>
+          <label>Password:</label><input type="password" id="adminPass" required>
+          <button class="btn-primary">Login</button>
+        </form>
+        <p id="loginMsg"></p>
+      </div>
+    </section>
+
+    <!-- ADMIN (FULL CONTROL PANEL) -->
+    <section id="admin" class="page-section hidden">
+      <div class="admin-shell">
+        <aside class="admin-sidebar">
+          <div class="sidebar-brand"><img id="sidebarLogo" src="" alt="logo"><h3>AOEM Admin</h3></div>
+          <nav class="sidebar-nav">
+            <button onclick="adminShow('dashboard')" class="active">Dashboard</button>
+            <button onclick="adminShow('posts')">Posting</button>
+            <button onclick="adminShow('ranks')">Ranks</button>
+            <button onclick="adminShow('migrations')">Migrasi</button>
+            <button onclick="adminShow('files')">Wallpaper & Logo</button>
+            <button onclick="adminShow('admins')">Admins</button>
+            <button onclick="adminShow('server')">Server & Events</button>
+            <button onclick="adminShow('settings')">Settings</button>
+            <button class="btn-danger" onclick="adminLogout()">Logout</button>
+          </nav>
+        </aside>
+
+        <div class="admin-main">
+          <!-- Dashboard -->
+          <div id="admin-dashboard" class="admin-panel">
+            <h2>Dashboard</h2>
+            <div class="cards-grid">
+              <div class="card"><h3>Total Post</h3><div id="statPosts">-</div></div>
+              <div class="card"><h3>Total Rank</h3><div id="statRanks">-</div></div>
+              <div class="card"><h3>Total Migrasi</h3><div id="statMigs">-</div></div>
             </div>
-            <p class="note" data-lang-key="mig_note">Anda dapat mendaftar melalui formulir di menu <strong>Beranda</strong>.</p>
+          </div>
+
+          <!-- Posts manager -->
+          <div id="admin-posts" class="admin-panel hidden">
+            <h2>Postingan</h2>
             <div class="card">
-                <h3 data-lang-key="mig_list_card">Daftar Pendaftar (Kontak disamarkan)</h3>
-                 <div class="data-table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th data-lang-key="tbl_no">#</th>
-                                <th data-lang-key="tbl_player">Pemain</th>
-                                <th data-lang-key="tbl_server_asal">Server Asal</th>
-                                <th data-lang-key="tbl_power_jt">Power (Jt)</th>
-                                <th data-lang-key="tbl_date">Tanggal Daftar</th>
-                            </tr>
-                        </thead>
-                        <tbody id="migrationListPublic">
-                            </tbody>
-                    </table>
-                </div>
+              <form id="postForm" onsubmit="event.preventDefault(); submitPost();">
+                <input type="hidden" id="editPostId">
+                <label>Judul:</label><input id="postTitle">
+                <label>Isi / URL gambar:</label><textarea id="postContent"></textarea>
+                <label><input type="checkbox" id="postFeatured"> Tandai sebagai featured (slider)</label>
+                <button class="btn-primary" type="submit">Simpan</button>
+                <button id="cancelEditBtn" class="btn-secondary hidden" onclick="cancelEditPost()">Batalkan</button>
+              </form>
             </div>
-        </div>
+            <h4>Daftar Post</h4>
+            <div id="adminPostList"></div>
+          </div>
 
-        <div id="login" class="content-section hidden">
-            <h2 data-lang-key="admin_title">🔑 Admin Panel</h2>
-            <div class="card" style="max-width: 400px; margin: 20px auto;">
-                <h3 data-lang-key="admin_login_card">Login Admin</h3>
-                <div class="form-group">
-                    <label for="adminPass">Password:</label>
-                    <input type="password" id="adminPass" required>
-                </div>
-                <button class="btn btn-primary" data-lang-key="btn_login" onclick="loginAdmin()">Login</button>
-                <p id="loginMessage" style="margin-top: 10px;"></p>
+          <!-- Ranks manager -->
+          <div id="admin-ranks" class="admin-panel hidden">
+            <h2>Ranks</h2>
+            <div class="card">
+              <form id="rankForm" onsubmit="event.preventDefault(); addOrUpdateRank();">
+                <input type="hidden" id="editRankId">
+                <label>Nama:</label><input id="rankName">
+                <label>Aliansi:</label><input id="rankAlliance">
+                <label>Power:</label><input id="rankPower" type="number">
+                <label>Merit:</label><input id="rankMerit" type="number">
+                <button class="btn-primary">Simpan Rank</button>
+                <button id="cancelRankEditBtn" class="btn-secondary hidden" onclick="cancelEditRank()">Batal</button>
+              </form>
             </div>
-        </div>
+            <h4>Daftar Rank (Admin)</h4>
+            <div id="adminRankList"></div>
+          </div>
 
-        <div id="admin" class="content-section hidden">
-            <h2 data-lang-key="admin_title">🔑 Admin Panel</h2>
-            <button class="btn btn-warning" data-lang-key="btn_logout" onclick="logoutAdmin()">Logout Admin</button>
-            <hr style="margin: 20px 0;">
-
-            <div class="admin-section">
-                <h3 data-lang-key="adm_post_title">1. Tambah/Edit Postingan</h3>
-                <form id="adminPostForm">
-                    <input type="hidden" id="postIdToEdit">
-                    <div class="form-group">
-                        <label for="postTitle" data-lang-key="adm_post_title_label">Judul Postingan:</label>
-                        <input type="text" id="postTitle" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="postContent" data-lang-key="adm_post_content_label">Isi Postingan (Teks/URL Gambar/Embed YouTube):</label>
-                        <textarea id="postContent" rows="4" required></textarea>
-                    </div>
-                    <button type="button" class="btn btn-primary" id="postSubmitBtn" data-lang-key="adm_btn_add" onclick="submitAdminPost()">Tambah Postingan</button>
-                    <button type="button" class="btn btn-secondary hidden" id="cancelEditBtn" data-lang-key="adm_btn_cancel" onclick="cancelEditPost()">Batalkan Edit</button>
-                </form>
-                
-                <h4 style="margin-top: 20px;" data-lang-key="adm_post_manage">Kelola Postingan Saat Ini</h4>
-                <div id="adminPostList">
-                    </div>
+          <!-- Migrations manager -->
+          <div id="admin-migrations" class="admin-panel hidden">
+            <h2>Manajemen Migrasi</h2>
+            <div id="adminMigList"></div>
+            <div id="migEditCard" class="mig-edit-card hidden card">
+              <h4>Edit Pendaftar</h4>
+              <form onsubmit="event.preventDefault(); saveMigrationEdit();">
+                <input type="hidden" id="editMigId">
+                <label>Nama:</label><input id="editMigName">
+                <label>Server:</label><input id="editMigServer">
+                <label>Power:</label><input id="editMigPower" type="number">
+                <label>Kontak:</label><input id="editMigContact">
+                <button class="btn-primary">Simpan</button>
+                <button class="btn-secondary" onclick="cancelMigEdit()">Batal</button>
+              </form>
             </div>
+          </div>
 
-            <div class="admin-section">
-                <h3 data-lang-key="adm_ranks_title">2. Input Data Peringkat (Power/Merit)</h3>
-                
-                <h4 data-lang-key="adm_rank_add_title">Tambahkan Entri Ranking Baru</h4>
-                <form id="adminRankInputForm" style="display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; margin-bottom: 20px;">
-                    <div class="form-group" style="flex-basis: 50px;">
-                        <label for="rankNo" data-lang-key="adm_rank_no"># Rank:</label>
-                        <input type="number" id="rankNo" value="0" min="0" style="width: 100%;">
-                    </div>
-                    <div class="form-group" style="flex-basis: 150px; flex-grow: 1;">
-                        <label for="rankName" data-lang-key="adm_rank_name">Nama Pemain:</label>
-                        <input type="text" id="rankName" required style="width: 100%;">
-                    </div>
-                    <div class="form-group" style="flex-basis: 100px; flex-grow: 1;">
-                        <label for="rankAlliance" data-lang-key="adm_rank_alliance">Nama Aliansi:</label>
-                        <input type="text" id="rankAlliance" style="width: 100%;">
-                    </div>
-                    <div class="form-group" style="flex-basis: 100px;">
-                        <label for="rankPowerValue" data-lang-key="adm_rank_power">Power (Jt):</label>
-                        <input type="number" id="rankPowerValue" value="0" step="0.1" min="0" style="width: 100%;">
-                    </div>
-                    <div class="form-group" style="flex-basis: 80px;">
-                        <label for="rankMeritValue" data-lang-key="adm_rank_merit">Merit:</label>
-                        <input type="number" id="rankMeritValue" value="0" min="0" style="width: 100%;">
-                    </div>
-                    <div class="form-group" style="flex-basis: 150px; flex-grow: 1;">
-                        <label for="rankNotes" data-lang-key="adm_rank_notes">Keterangan:</label>
-                        <input type="text" id="rankNotes" style="width: 100%;">
-                    </div>
-                    <button type="button" class="btn btn-primary" data-lang-key="adm_btn_add_rank" onclick="addRankEntry()">Tambahkan Entri</button>
-                </form>
-
-                <h4 data-lang-key="adm_ranks_manage">Data Ranking Saat Ini (Edit lalu Simpan)</h4>
-                <div id="adminRankListContainer">
-                    </div>
-                <div class="admin-actions">
-                    <button class="btn btn-primary" data-lang-key="adm_btn_save_all_ranks" onclick="updateRankDataAdmin()">Simpan Semua Perubahan</button>
-                    <button class="btn btn-danger" data-lang-key="adm_btn_clear_power" onclick="clearRankDataPrompt('power')">Clear Power Ranks</button>
-                    <button class="btn btn-danger" data-lang-key="adm_btn_clear_merit" onclick="clearRankDataPrompt('merit')">Clear Merit Ranks</button>
-                </div>
+          <!-- Files (wallpaper/logo/sound) -->
+          <div id="admin-files" class="admin-panel hidden">
+            <h2>Wallpaper & Logo</h2>
+            <div class="card">
+              <h4>Upload Wallpaper</h4>
+              <input type="file" id="bgInput" accept="image/*">
+              <button class="btn-primary" onclick="uploadBackground()">Upload Wallpaper</button>
+              <p>Preview:</p><img id="currentBgPreview" style="max-width:280px;border-radius:8px">
             </div>
 
-            <div class="admin-section">
-                <h3 data-lang-key="adm_status_event_title">3. Edit Status Event</h3>
-                <div class="form-group">
-                    <label for="admEventName" data-lang-key="adm_status_event_name">Nama Event Aktif:</label>
-                    <input type="text" id="admEventName">
-                </div>
-                <div class="form-group">
-                    <label for="admEventStatus" data-lang-key="adm_status_event_status">Status Event:</label>
-                    <input type="text" id="admEventStatus">
-                </div>
-                <div class="form-group">
-                    <label for="admEventNote" data-lang-key="adm_status_event_note">Catatan / Detail Tambahan:</label>
-                    <textarea id="admEventNote" rows="2"></textarea>
-                </div>
-                <button class="btn btn-primary" data-lang-key="adm_btn_update" onclick="updateEventStatusAdmin()">Update Status</button>
+            <div class="card">
+              <h4>Upload Logo</h4>
+              <input type="file" id="logoInput" accept="image/*">
+              <button class="btn-primary" onclick="uploadLogo()">Upload Logo</button>
+              <p>Logo saat ini:</p><img id="currentLogo" style="max-width:160px;border-radius:8px">
             </div>
 
-            <div class="admin-section">
-                <h3 data-lang-key="adm_info_title">4. Edit Info Server</h3>
-                <div class="form-group">
-                    <label for="admAllianceInfo" data-lang-key="adm_info_alliance_label">Info Aliansi Utama (Gunakan tag HTML untuk format):</label>
-                    <textarea id="admAllianceInfo" rows="4"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="admRulesInfo" data-lang-key="adm_info_rules_label">Peraturan Server (Gunakan tag HTML untuk format):</label>
-                    <textarea id="admRulesInfo" rows="4"></textarea>
-                </div>
-                <button class="btn btn-primary" data-lang-key="adm_btn_add_update" onclick="updateServerInfoAdmin()">Tambah/Update Data Info</button>
+            <div class="card">
+              <h4>War sound (klik)</h4>
+              <input type="file" id="soundInput" accept="audio/*">
+              <button class="btn-primary" onclick="uploadWarSound()">Upload Sound</button>
+              <p>Sound saat ini: <span id="currentSoundLabel">default synth</span></p>
             </div>
-            
-            <div class="admin-section">
-                <h3 data-lang-key="adm_kvk_title">6. Edit Jadwal Perang</h3>
-                <div class="form-group">
-                    <label for="admKvkSchedule" data-lang-key="adm_kvk_label">Jadwal KvK/Stellar War (Gunakan tag HTML untuk format):</label>
-                    <textarea id="admKvkSchedule" rows="4"></textarea>
-                </div>
-                <button class="btn btn-primary" data-lang-key="adm_btn_save" onclick="updateKvkScheduleAdmin()">Simpan Jadwal</button>
+          </div>
+
+          <!-- Admins manager -->
+          <div id="admin-admins" class="admin-panel hidden">
+            <h2>Admins</h2>
+            <div class="card">
+              <form onsubmit="event.preventDefault(); addAdminEmail();">
+                <label>Tambah Email Admin:</label><input id="newAdminEmail" type="email" required>
+                <button class="btn-primary">Tambah</button>
+              </form>
             </div>
+            <h4>Daftar Admin</h4>
+            <div id="adminEmailsList"></div>
+          </div>
 
-            <div class="admin-section">
-                <h3 data-lang-key="adm_king_title">7. Edit Nama Raja</h3>
-                <div class="form-group">
-                    <label for="admKingName" data-lang-key="adm_king_label">Nama Raja Saat Ini:</label>
-                    <input type="text" id="admKingName">
-                </div>
-                <button class="btn btn-primary" data-lang-key="adm_btn_save_king" onclick="updateKingNameAdmin()">Simpan Nama Raja</button>
-            </div>
-
-            <div class="admin-section">
-                <h3 data-lang-key="adm_mig_status_and_list">5. Pendaftaran Migrasi & Status</h3>
-                <div style="display: flex; gap: 20px;">
-                    <div class="form-group">
-                        <label for="admWarStatus" data-lang-key="adm_status_war">Status War:</label>
-                        <input type="text" id="admWarStatus">
-                    </div>
-                    <div class="form-group">
-                        <label for="admMigStatus" data-lang-key="adm_status_mig">Status Migrasi:</label>
-                        <input type="text" id="admMigStatus">
-                    </div>
-                    <button class="btn btn-primary" data-lang-key="adm_btn_update" onclick="updateWarMigStatusAdmin()">Update Status</button>
-                </div>
-
-                <h4 data-lang-key="adm_mig_detail_title">Data Pendaftaran Migrasi (DETAIL - Kontak Jelas)</h4>
-                 <div class="data-table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th data-lang-key="tbl_no">#</th>
-                                <th data-lang-key="tbl_player">Pemain</th>
-                                <th data-lang-key="tbl_server_asal">Server Asal</th>
-                                <th data-lang-key="tbl_power_jt">Power (Jt)</th>
-                                <th data-lang-key="tbl_contact">Kontak (Jelas)</th>
-                                <th data-lang-key="tbl_date">Tanggal Daftar</th>
-                                <th data-lang-key="tbl_action">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="migrationListAdmin">
-                            </tbody>
-                    </table>
-                </div>
-                <div class="admin-actions">
-                     <button class="btn btn-danger" data-lang-key="adm_btn_clear_all" onclick="clearAllDataPrompt('migration')">Bersihkan Daftar Migrasi</button>
-                </div>
+          <!-- Server & events -->
+          <div id="admin-server" class="admin-panel hidden">
+            <h2>Server & Event</h2>
+            <div class="card">
+              <h4>Status Event</h4>
+              <label>Nama:</label><input id="admEventName">
+              <label>Status:</label><input id="admEventStatus">
+              <label>Catatan:</label><textarea id="admEventNote"></textarea>
+              <button class="btn-primary" onclick="saveEventStatus()">Simpan</button>
             </div>
 
-            <div class="admin-delete-all">
-                <h4 style="color: var(--danger-color);">PERINGATAN! ZONA BAHAYA!</h4>
-                <button class="btn btn-danger" data-lang-key="adm_btn_clear_all_data" onclick="clearAllDataPrompt('all')">Clear All Data (Bahaya!)</button>
+            <div class="card">
+              <h4>Info Server</h4>
+              <label>Aliansi:</label><textarea id="admAllianceInfo"></textarea>
+              <label>Peraturan:</label><textarea id="admRulesInfo"></textarea>
+              <button class="btn-primary" onclick="saveServerInfo()">Simpan</button>
             </div>
 
-        </div>
-
-    </div>
-
-    <button onclick="scrollToTop()" id="scrollToTopBtn" title="Go to top">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
-    <div class="footer">
-        <p data-lang-key="footer_text">© 2025 AOEM 199 by HADES.</p>
-    </div>
-
-    <script>
-        // --- GLOBAL DATA & SETUP ---
-
-        const LANG_DATA = {
-            id: {
-                page_title: "Situs Komunitas AoEM Server 199",
-                hub_title: "AOEM S199",
-                king_name_prefix: "Raja:",
-                menu_home: "Beranda",
-                menu_ranks: "Peringkat",
-                menu_events: "Events",
-                menu_info: "Info Server",
-                menu_migration: "Pendaftar Migrasi",
-                menu_login: "Login Admin",
-                menu_admin: "Admin Tools",
-
-                home_title: "👑 Beranda & Postingan Terbaru",
-                status_war_title: "STATUS SERVER WAR",
-                mig_status_card: "Status Penerimaan Migrasi S199",
-                status_label: "STATUS",
-                post_loading: "Memuat postingan...",
-                mig_form_title: "🐦‍🔥 Formulir Pendaftaran Migrasi ke S199",
-                mig_form_note: "Silakan isi data Anda di bawah ini jika berminat migrasi.",
-                mig_name: "Nama Pemain/In-Game Name:",
-                mig_server: "Server Asal:",
-                mig_power: "Total Power (Juta):",
-                mig_contact: "Kontak (Discord/Telegram):",
-                mig_submit: "Kirim Pendaftaran Migrasi",
-
-                ranks_title: "📈 Peringkat Pemain (Power & Merit)",
-                ranks_power_card: "Power Ranking TOP 5 (Display Power)",
-                ranks_merit_card: "Merit Ranking TOP 5 (Display Merit)",
-                tbl_no: "#",
-                tbl_player: "Pemain",
-                tbl_alliance: "Aliansi",
-                tbl_power: "Power",
-                tbl_merit: "Merit",
-                tbl_notes: "Keterangan",
-
-                events_title: "⏳ Status Event Global",
-                events_current_card: "Event Sedang Berlangsung",
-                status_label_current: "Status",
-                events_note: "Info terakhir: ---",
-                events_kvk_card: "Jadwal Perang",
-
-                info_title: "🌐 Info Server 199",
-                info_alliance_card: "Informasi Aliansi Utama",
-                info_rules_card: "Peraturan Server",
-
-                mig_status_title: "✈️ Status Pendaftar Migrasi ke Server 199",
-                mig_note: "Anda dapat mendaftar melalui formulir di menu **Beranda**.",
-                mig_list_card: "Daftar Pendaftar (Kontak disamarkan)",
-                tbl_server_asal: "Server Asal",
-                tbl_power_jt: "Power (Jt)",
-                tbl_date: "Tanggal Daftar",
-
-                admin_title: "🔑 Admin Panel",
-                admin_login_card: "Login Admin",
-                btn_login: "Login",
-                btn_logout: "Logout Admin",
-                adm_btn_clear_all_data: "Clear All Data (Bahaya!)",
-
-                adm_post_title: "1. Tambah/Edit Postingan",
-                adm_post_title_label: "Judul Postingan:",
-                adm_post_content_label: "Isi Postingan (Teks/URL Gambar/Embed YouTube):",
-                adm_btn_add: "Tambah Postingan",
-                adm_btn_cancel: "Batalkan Edit",
-                adm_post_manage: "Kelola Postingan Saat Ini",
-                
-                adm_rank_add_title: "Tambahkan Entri Ranking Baru",
-                adm_rank_no: "# Rank:",
-                adm_rank_name: "Nama Pemain:",
-                adm_rank_alliance: "Nama Aliansi:",
-                adm_rank_power: "Power (Jt):",
-                adm_rank_merit: "Merit:",
-                adm_rank_notes: "Keterangan:",
-                adm_btn_add_rank: "Tambahkan Entri",
-
-                adm_ranks_title: "2. Input Data Peringkat (Power/Merit)",
-                adm_ranks_manage: "Data Ranking Saat Ini (Edit lalu Simpan)",
-                adm_btn_save_all_ranks: "Simpan Semua Perubahan",
-                adm_btn_clear_power: "Clear Power Ranks",
-                adm_btn_clear_merit: "Clear Merit Ranks",
-
-                adm_status_event_title: "3. Edit Status Event",
-                adm_status_event_name: "Nama Event Aktif:",
-                adm_status_event_status: "Status Event:",
-                adm_status_event_note: "Catatan / Detail Tambahan:",
-                adm_btn_update: "Update Status",
-
-                adm_info_title: "4. Edit Info Server",
-                adm_info_alliance_label: "Info Aliansi Utama (Gunakan tag HTML untuk format):",
-                adm_info_rules_label: "Peraturan Server (Gunakan tag HTML untuk format):",
-                adm_btn_add_update: "Tambah/Update Data Info",
-
-                adm_mig_status_and_list: "5. Pendaftaran Migrasi & Status",
-                adm_status_war: "Status War:",
-                adm_status_mig: "Status Migrasi:",
-                adm_mig_detail_title: "Data Pendaftaran Migrasi (DETAIL - Kontak Jelas)",
-                tbl_contact: "Kontak (Jelas)",
-                tbl_action: "Aksi",
-                adm_btn_clear_all: "Bersihkan Daftar Migrasi",
-                
-                adm_kvk_title: "6. Edit Jadwal Perang",
-                adm_kvk_label: "Jadwal KvK/Stellar War (Gunakan tag HTML untuk format):",
-                adm_btn_save: "Simpan Jadwal",
-
-                adm_king_title: "7. Edit Nama Raja",
-                adm_king_label: "Nama Raja Saat Ini:",
-                adm_btn_save_king: "Simpan Nama Raja",
-                
-                // Tambahan untuk notifikasi
-                alert_post_add_success: "Postingan berhasil ditambahkan.",
-                alert_post_update_success: "Postingan berhasil diperbarui.",
-                alert_post_delete_success: "Postingan berhasil dihapus.",
-                alert_post_delete_confirm: "Yakin ingin menghapus postingan ini?",
-                alert_rank_add_success: "Entri ranking berhasil ditambahkan. Ingat untuk menyimpan semua perubahan.",
-                alert_rank_update_success: "Semua data ranking berhasil diperbarui dan disimpan.",
-                alert_rank_delete_confirm: (type) => `Yakin ingin menghapus entri ${type} ranking ini?`,
-                alert_rank_delete_success: "Entri berhasil dihapus.",
-                alert_rank_clear_confirm: (type) => `Yakin ingin menghapus SEMUA data ${type} ranking?`,
-                alert_rank_clear_success: (type) => `${type} ranking berhasil dikosongkan.`,
-                alert_event_update_success: "Status Event berhasil diperbarui.",
-                alert_server_update_success: "Informasi Server berhasil diperbarui.",
-                alert_kvk_update_success: "Jadwal Perang berhasil diperbarui.",
-                alert_king_update_success: "Nama Raja berhasil diperbarui.",
-                alert_login_success: "Login Berhasil!",
-                alert_login_fail: "Password salah!",
-                alert_logout_success: "Anda telah logout.",
-                alert_mig_form_incomplete: "Mohon lengkapi semua bidang formulir migrasi.",
-                alert_mig_submit_success: "✅ Pendaftaran Migrasi Berhasil Dikirim! Data Anda akan ditinjau oleh Admin.",
-                alert_mig_delete_confirm: "Apakah Anda yakin ingin MENGHAPUS SEMUA DATA PENDAFTAR MIGRASI? Aksi ini tidak dapat dibatalkan!",
-                alert_mig_delete_entry_success: "Pendaftaran migrasi berhasil dihapus.",
-                alert_data_clear_all_confirm: "PERINGATAN! Anda akan MENGHAPUS SEMUA DATA (Postingan, Ranking, Status, Migrasi, Info). Lanjutkan?",
-                alert_data_clear_all_success: "Semua data berhasil dihapus! Halaman akan dimuat ulang.",
-                
-                footer_text: "© 2025 AOEM 199 by HADES."
-            },
-            en: {
-                page_title: "AoEM Server 199 Community Site",
-                hub_title: "AOEM S199",
-                king_name_prefix: "King:",
-                menu_home: "Home",
-                menu_ranks: "Ranks",
-                menu_events: "Events",
-                menu_info: "Server Info",
-                menu_migration: "Migration Registrants",
-                menu_login: "Admin Login",
-                menu_admin: "Admin Tools",
-
-                home_title: "👑 Home & Latest Posts",
-                status_war_title: "SERVER WAR STATUS",
-                mig_status_card: "S199 Migration Acceptance Status",
-                status_label: "STATUS",
-                post_loading: "Loading posts...",
-                mig_form_title: "🐦‍🔥 Migration Registration Form to S199",
-                mig_form_note: "Please fill in your data below if interested in migrating.",
-                mig_name: "Player/In-Game Name:",
-                mig_server: "Source Server:",
-                mig_power: "Total Power (Million):",
-                mig_contact: "Contact (Discord/Telegram):",
-                mig_submit: "Submit Migration Registration",
-
-                ranks_title: "📈 Player Ranks (Power & Merit)",
-                ranks_power_card: "Power Ranking TOP 5 (Display Power)",
-                ranks_merit_card: "Merit Ranking TOP 5 (Display Merit)",
-                tbl_no: "#",
-                tbl_player: "Player",
-                tbl_alliance: "Alliance",
-                tbl_power: "Power",
-                tbl_merit: "Merit",
-                tbl_notes: "Notes",
-
-                events_title: "⏳ Global Event Status",
-                events_current_card: "Current Event Running",
-                status_label_current: "Status",
-                events_note: "Latest info: ---",
-                events_kvk_card: "War Schedule",
-
-                info_title: "🌐 Server 199 Info",
-                info_alliance_card: "Main Alliance Information",
-                info_rules_card: "Server Rules",
-
-                mig_status_title: "✈️ Migration Registrants Status to Server 199",
-                mig_note: "You can register via the form in the **Home** menu.",
-                mig_list_card: "Registrants List (Contact obscured)",
-                tbl_server_asal: "Source Server",
-                tbl_power_jt: "Power (M)",
-                tbl_date: "Registration Date",
-
-                admin_title: "🔑 Admin Panel",
-                admin_login_card: "Admin Login",
-                btn_login: "Login",
-                btn_logout: "Logout Admin",
-                adm_btn_clear_all_data: "Clear All Data (Dangerous!)",
-                
-                adm_rank_add_title: "Add New Rank Entry",
-                adm_rank_no: "# Rank:",
-                adm_rank_name: "Player Name:",
-                adm_rank_alliance: "Alliance Name:",
-                adm_rank_power: "Power (M):",
-                adm_rank_merit: "Merit:",
-                adm_rank_notes: "Notes:",
-                adm_btn_add_rank: "Add Entry",
-
-
-                adm_post_title: "1. Add/Edit Post",
-                adm_post_title_label: "Post Title:",
-                adm_post_content_label: "Post Content (Text/Image URL/YouTube Embed):",
-                adm_btn_add: "Add Post",
-                adm_btn_cancel: "Cancel Edit",
-                adm_post_manage: "Manage Current Posts",
-
-                adm_ranks_title: "2. Input Rank Data (Power/Merit)",
-                adm_ranks_manage: "Current Ranking Data (Edit then Save)",
-                adm_btn_save_all_ranks: "Save All Changes",
-                adm_btn_clear_power: "Clear Power Ranks",
-                adm_btn_clear_merit: "Clear Merit Ranks",
-
-                adm_status_event_title: "3. Edit Event Status",
-                adm_status_event_name: "Active Event Name:",
-                adm_status_event_status: "Event Status:",
-                adm_status_event_note: "Note / Additional Details:",
-                adm_btn_update: "Update Status",
-
-                adm_info_title: "4. Edit Server Info",
-                adm_info_alliance_label: "Main Alliance Info (Use HTML tags for format):",
-                adm_info_rules_label: "Server Rules (Use HTML tags for format):",
-                adm_btn_add_update: "Add/Update Info Data",
-
-                adm_mig_status_and_list: "5. Migration Registration & Status",
-                adm_status_war: "War Status:",
-                adm_status_mig: "Migration Status:",
-                adm_mig_detail_title: "Migration Registration Data (DETAIL - Clear Contact)",
-                tbl_contact: "Contact (Clear)",
-                tbl_action: "Action",
-                adm_btn_clear_all: "Clear Migration List",
-                
-                adm_kvk_title: "6. Edit War Schedule",
-                adm_kvk_label: "KvK/Stellar War Schedule (Use HTML tags for format):",
-                adm_btn_save: "Save Schedule",
-
-                adm_king_title: "7. Edit King Name",
-                adm_king_label: "Current King Name:",
-                adm_btn_save_king: "Save King Name",
-
-                // Tambahan untuk notifikasi
-                alert_post_add_success: "Post successfully added.",
-                alert_post_update_success: "Post successfully updated.",
-                alert_post_delete_success: "Post successfully deleted.",
-                alert_post_delete_confirm: "Are you sure you want to delete this post?",
-                alert_rank_add_success: "Rank entry successfully added. Remember to save all changes.",
-                alert_rank_update_success: "All ranking data successfully updated and saved.",
-                alert_rank_delete_confirm: (type) => `Are you sure you want to delete this ${type} rank entry?`,
-                alert_rank_delete_success: "Entry successfully deleted.",
-                alert_rank_clear_confirm: (type) => `Are you sure you want to clear ALL ${type} rank data?`,
-                alert_rank_clear_success: (type) => `${type} ranking successfully cleared.`,
-                alert_event_update_success: "Event Status successfully updated.",
-                alert_server_update_success: "Server Information successfully updated.",
-                alert_kvk_update_success: "War Schedule successfully updated.",
-                alert_king_update_success: "King Name successfully updated.",
-                alert_login_success: "Login Successful!",
-                alert_login_fail: "Incorrect password!",
-                alert_logout_success: "You have logged out.",
-                alert_mig_form_incomplete: "Please complete all migration form fields.",
-                alert_mig_submit_success: "✅ Migration Registration Successfully Sent! Your data will be reviewed by the Admin.",
-                alert_mig_delete_confirm: "Are you sure you want to DELETE ALL MIGRATION REGISTRATION DATA? This action cannot be undone!",
-                alert_mig_delete_entry_success: "Migration registration successfully deleted.",
-                alert_data_clear_all_confirm: "WARNING! You are about to DELETE ALL DATA (Posts, Ranks, Status, Migration, Info). Continue?",
-                alert_data_clear_all_success: "All data successfully deleted! The page will reload.",
-                
-                footer_text: "© 2025 AOEM 199 by HADES."
-            },
-            es: {
-                page_title: "Sitio Comunitario AoEM Servidor 199",
-                hub_title: "AOEM S199",
-                king_name_prefix: "Rey:",
-                menu_home: "Inicio",
-                menu_ranks: "Rangos",
-                menu_events: "Eventos",
-                menu_info: "Información del Servidor",
-                menu_migration: "Registros de Migración",
-                menu_login: "Acceso Admin",
-                menu_admin: "Herramientas de Admin",
-
-                home_title: "👑 Inicio y Últimas Publicaciones",
-                status_war_title: "ESTADO DE GUERRA DEL SERVIDOR",
-                mig_status_card: "Estado de Aceptación de Migración S199",
-                status_label: "ESTADO",
-                post_loading: "Cargando publicaciones...",
-                mig_form_title: "🐦‍🔥 Formulario de Registro de Migración a S199",
-                mig_form_note: "Por favor, complete sus datos si está interesado en migrar.",
-                mig_name: "Nombre del Jugador/Nombre en el Juego:",
-                mig_server: "Servidor de Origen:",
-                mig_power: "Poder Total (Millones):",
-                mig_contact: "Contacto (Discord/Telegram):",
-                mig_submit: "Enviar Registro de Migración",
-
-                ranks_title: "📈 Rangos de Jugadores (Poder y Mérito)",
-                ranks_power_card: "Clasificación de Poder TOP 5",
-                ranks_merit_card: "Clasificación de Mérito TOP 5",
-                tbl_no: "#",
-                tbl_player: "Jugador",
-                tbl_alliance: "Alianza",
-                tbl_power: "Poder",
-                tbl_merit: "Mérito",
-                tbl_notes: "Notas",
-
-                events_title: "⏳ Estado de Eventos Globales",
-                events_current_card: "Evento Actual en Curso",
-                status_label_current: "Estado",
-                events_note: "Última información: ---",
-                events_kvk_card: "Horario de Guerra",
-
-                info_title: "🌐 Información del Servidor 199",
-                info_alliance_card: "Información Principal de la Alianza",
-                info_rules_card: "Reglas del Servidor",
-
-                mig_status_title: "✈️ Estado de Registros de Migración al Servidor 199",
-                mig_note: "Puede registrarse a través del formulario en el menú **Inicio**.",
-                mig_list_card: "Lista de Registrados (Contacto oculto)",
-                tbl_server_asal: "Servidor de Origen",
-                tbl_power_jt: "Poder (M)",
-                tbl_date: "Fecha de Registro",
-
-                admin_title: "🔑 Panel de Administración",
-                admin_login_card: "Acceso de Administrador",
-                btn_login: "Acceder",
-                btn_logout: "Cerrar Sesión de Admin",
-                adm_btn_clear_all_data: "Borrar Todos los Datos (¡Peligro!)",
-
-                adm_rank_add_title: "Añadir Nueva Entrada de Rango",
-                adm_rank_no: "# Rango:",
-                adm_rank_name: "Nombre del Jugador:",
-                adm_rank_alliance: "Nombre de la Alianza:",
-                adm_rank_power: "Poder (M):",
-                adm_rank_merit: "Mérito:",
-                adm_rank_notes: "Notas:",
-                adm_btn_add_rank: "Añadir Entrada",
-
-                adm_post_title: "1. Añadir/Editar Publicación",
-                adm_post_title_label: "Título de la Publicación:",
-                adm_post_content_label: "Contenido (Texto/URL de Imagen/Embed de YouTube):",
-                adm_btn_add: "Añadir Publicación",
-                adm_btn_cancel: "Cancelar Edición",
-                adm_post_manage: "Gestionar Publicaciones Actuales",
-
-                adm_ranks_title: "2. Ingresar Datos de Rango (Poder/Mérito)",
-                adm_ranks_manage: "Datos de Clasificación Actuales (Editar y Guardar)",
-                adm_btn_save_all_ranks: "Guardar Todos los Cambios",
-                adm_btn_clear_power: "Borrar Rangos de Poder",
-                adm_btn_clear_merit: "Borrar Rangos de Mérito",
-
-                adm_status_event_title: "3. Editar Estado del Evento",
-                adm_status_event_name: "Nombre del Evento Activo:",
-                adm_status_event_status: "Estado del Evento:",
-                adm_status_event_note: "Nota / Detalles Adicionales:",
-                adm_btn_update: "Actualizar Estado",
-
-                adm_info_title: "4. Editar Información del Servidor",
-                adm_info_alliance_label: "Info de la Alianza Principal (Usar etiquetas HTML):",
-                adm_info_rules_label: "Reglas del Servidor (Usar etiquetas HTML):",
-                adm_btn_add_update: "Añadir/Actualizar Datos",
-
-                adm_mig_status_and_list: "5. Registro de Migración y Estado",
-                adm_status_war: "Estado de Guerra:",
-                adm_status_mig: "Estado de Migración:",
-                adm_mig_detail_title: "Datos de Registro de Migración (DETALLE - Contacto visible)",
-                tbl_contact: "Contacto (Claro)",
-                tbl_action: "Acción",
-                adm_btn_clear_all: "Borrar Lista de Migración",
-                
-                adm_kvk_title: "6. Editar Horario de Guerra",
-                adm_kvk_label: "Horario de KvK/Guerra Estelar (Usar etiquetas HTML):",
-                adm_btn_save: "Guardar Horario",
-
-                adm_king_title: "7. Editar Nombre del Rey",
-                adm_king_label: "Nombre del Rey Actual:",
-                adm_btn_save_king: "Guardar Nombre del Rey",
-                
-                // Tambahan untuk notifikasi
-                alert_post_add_success: "Publicación añadida con éxito.",
-                alert_post_update_success: "Publicación actualizada con éxito.",
-                alert_post_delete_success: "Publicación eliminada con éxito.",
-                alert_post_delete_confirm: "¿Estás seguro de que quieres eliminar esta publicación?",
-                alert_rank_add_success: "Entrada de rango añadida con éxito. Recuerda guardar todos los cambios.",
-                alert_rank_update_success: "Todos los datos de clasificación actualizados y guardados con éxito.",
-                alert_rank_delete_confirm: (type) => `¿Estás seguro de que quieres eliminar esta entrada de rango de ${type}?`,
-                alert_rank_delete_success: "Entrada eliminada con éxito.",
-                alert_rank_clear_confirm: (type) => `¿Estás seguro de que quieres borrar TODOS los datos de rango de ${type}?`,
-                alert_rank_clear_success: (type) => `Clasificación de ${type} borrada con éxito.`,
-                alert_event_update_success: "Estado del evento actualizado con éxito.",
-                alert_server_update_success: "Información del servidor actualizada con éxito.",
-                alert_kvk_update_success: "Horario de guerra actualizado con éxito.",
-                alert_king_update_success: "Nombre del Rey actualizado con éxito.",
-                alert_login_success: "¡Acceso exitoso!",
-                alert_login_fail: "¡Contraseña incorrecta!",
-                alert_logout_success: "Has cerrado la sesión.",
-                alert_mig_form_incomplete: "Por favor, complete todos los campos del formulario de migración.",
-                alert_mig_submit_success: "✅ ¡Registro de Migración enviado con éxito! Sus datos serán revisados por el Administrador.",
-                alert_mig_delete_confirm: "¿Está seguro de que desea ELIMINAR TODOS LOS DATOS DE REGISTRO DE MIGRACIÓN? ¡Esta acción no se puede deshacer!",
-                alert_mig_delete_entry_success: "Registro de migración eliminado con éxito.",
-                alert_data_clear_all_confirm: "¡ADVERTENCIA! Está a punto de ELIMINAR TODOS LOS DATOS (Publicaciones, Rangos, Estado, Migración, Info). ¿Continuar?",
-                alert_data_clear_all_success: "Todos los datos eliminados con éxito! La página se recargará.",
-                
-                footer_text: "© 2025 AOEM 199 por HADES."
-            },
-            de: {
-                page_title: "AoEM Server 199 Community-Seite",
-                hub_title: "AOEM S199",
-                king_name_prefix: "König:",
-                menu_home: "Startseite",
-                menu_ranks: "Ränge",
-                menu_events: "Events",
-                menu_info: "Server-Info",
-                menu_migration: "Migrationsanmelder",
-                menu_login: "Admin Login",
-                menu_admin: "Admin Tools",
-
-                home_title: "👑 Startseite & Neueste Beiträge",
-                status_war_title: "SERVER-KRIEGSSTATUS",
-                mig_status_card: "S199 Migrationsannahmestatus",
-                status_label: "STATUS",
-                post_loading: "Beiträge werden geladen...",
-                mig_form_title: "🐦‍🔥 Migrationsanmeldeformular für S199",
-                mig_form_note: "Bitte füllen Sie Ihre Daten aus, wenn Sie an einer Migration interessiert sind.",
-                mig_name: "Spielername/In-Game Name:",
-                mig_server: "Ursprungsserver:",
-                mig_power: "Gesamt-Power (Millionen):",
-                mig_contact: "Kontakt (Discord/Telegram):",
-                mig_submit: "Migrationsanmeldung senden",
-
-                ranks_title: "📈 Spieler-Ränge (Power & Verdienst)",
-                ranks_power_card: "Power-Ranking TOP 5",
-                ranks_merit_card: "Verdienst-Ranking TOP 5",
-                tbl_no: "#",
-                tbl_player: "Spieler",
-                tbl_alliance: "Allianz",
-                tbl_power: "Power",
-                tbl_merit: "Verdienst",
-                tbl_notes: "Anmerkungen",
-
-                events_title: "⏳ Globaler Event-Status",
-                events_current_card: "Aktuell laufendes Event",
-                status_label_current: "Status",
-                events_note: "Neueste Info: ---",
-                events_kvk_card: "Kriegsplan",
-
-                info_title: "🌐 Server 199 Info",
-                info_alliance_card: "Hauptallianz-Informationen",
-                info_rules_card: "Server-Regeln",
-
-                mig_status_title: "✈️ Status der Migrationsanmelder für Server 199",
-                mig_note: "Sie können sich über das Formular im **Startseite**-Menü anmelden.",
-                mig_list_card: "Liste der Anmelder (Kontakt ausgeblendet)",
-                tbl_server_asal: "Ursprungsserver",
-                tbl_power_jt: "Power (M)",
-                tbl_date: "Anmeldedatum",
-
-                admin_title: "🔑 Admin Panel",
-                admin_login_card: "Admin Login",
-                btn_login: "Login",
-                btn_logout: "Admin Logout",
-                adm_btn_clear_all_data: "Alle Daten löschen (Gefährlich!)",
-                
-                adm_rank_add_title: "Neue Rang-Eintrag hinzufügen",
-                adm_rank_no: "# Rang:",
-                adm_rank_name: "Spielername:",
-                adm_rank_alliance: "Allianzname:",
-                adm_rank_power: "Power (M):",
-                adm_rank_merit: "Verdienst:",
-                adm_rank_notes: "Anmerkungen:",
-                adm_btn_add_rank: "Eintrag hinzufügen",
-
-                adm_post_title: "1. Beitrag hinzufügen/bearbeiten",
-                adm_post_title_label: "Beitragstitel:",
-                adm_post_content_label: "Beitragsinhalt (Text/Bild-URL/YouTube Embed):",
-                adm_btn_add: "Beitrag hinzufügen",
-                adm_btn_cancel: "Bearbeitung abbrechen",
-                adm_post_manage: "Aktuelle Beiträge verwalten",
-
-                adm_ranks_title: "2. Rangdaten eingeben (Power/Verdienst)",
-                adm_ranks_manage: "Aktuelle Rangdaten (Bearbeiten und Speichern)",
-                adm_btn_save_all_ranks: "Alle Änderungen speichern",
-                adm_btn_clear_power: "Power-Ränge löschen",
-                adm_btn_clear_merit: "Verdienst-Ränge löschen",
-
-                adm_status_event_title: "3. Event-Status bearbeiten",
-                adm_status_event_name: "Name des aktiven Events:",
-                adm_status_event_status: "Event-Status:",
-                adm_status_event_note: "Anmerkung / Zusätzliche Details:",
-                adm_btn_update: "Status aktualisieren",
-
-                adm_info_title: "4. Server-Info bearbeiten",
-                adm_info_alliance_label: "Hauptallianz-Info (HTML-Tags verwenden):",
-                adm_info_rules_label: "Server-Regeln (HTML-Tags verwenden):",
-                adm_btn_add_update: "Info-Daten hinzufügen/aktualisieren",
-
-                adm_mig_status_and_list: "5. Migrationsanmeldung & Status",
-                adm_status_war: "Kriegsstatus:",
-                adm_status_mig: "Migrationsstatus:",
-                adm_mig_detail_title: "Migrationsanmeldedaten (DETAIL - Klarer Kontakt)",
-                tbl_contact: "Kontakt (Klar)",
-                tbl_action: "Aktion",
-                adm_btn_clear_all: "Migrationsliste löschen",
-                
-                adm_kvk_title: "6. Kriegsplan bearbeiten",
-                adm_kvk_label: "KvK/Stellar War Plan (HTML-Tags verwenden):",
-                adm_btn_save: "Plan speichern",
-
-                adm_king_title: "7. Königsnamen bearbeiten",
-                adm_king_label: "Aktueller Königsname:",
-                adm_btn_save_king: "Königsnamen speichern",
-
-                // Tambahan untuk notifikasi
-                alert_post_add_success: "Beitrag erfolgreich hinzugefügt.",
-                alert_post_update_success: "Beitrag erfolgreich aktualisiert.",
-                alert_post_delete_success: "Beitrag erfolgreich gelöscht.",
-                alert_post_delete_confirm: "Sind Sie sicher, dass Sie diesen Beitrag löschen möchten?",
-                alert_rank_add_success: "Rang-Eintrag erfolgreich hinzugefügt. Denken Sie daran, alle Änderungen zu speichern.",
-                alert_rank_update_success: "Alle Rangdaten erfolgreich aktualisiert und gespeichert.",
-                alert_rank_delete_confirm: (type) => `Sind Sie sicher, dass Sie diesen ${type} Rang-Eintrag löschen möchten?`,
-                alert_rank_delete_success: "Eintrag erfolgreich gelöscht.",
-                alert_rank_clear_confirm: (type) => `Sind Sie sicher, dass Sie ALLE ${type} Rangdaten löschen möchten?`,
-                alert_rank_clear_success: (type) => `${type} Rang erfolgreich gelöscht.`,
-                alert_event_update_success: "Event-Status erfolgreich aktualisiert.",
-                alert_server_update_success: "Server-Informationen erfolgreich aktualisiert.",
-                alert_kvk_update_success: "Kriegsplan erfolgreich aktualisiert.",
-                alert_king_update_success: "Königsname erfolgreich aktualisiert.",
-                alert_login_success: "Login erfolgreich!",
-                alert_login_fail: "Falsches Passwort!",
-                alert_logout_success: "Sie wurden abgemeldet.",
-                alert_mig_form_incomplete: "Bitte füllen Sie alle Felder des Migrationsformulars aus.",
-                alert_mig_submit_success: "✅ Migrationsregistrierung erfolgreich gesendet! Ihre Daten werden vom Administrator überprüft.",
-                alert_mig_delete_confirm: "Sind Sie sicher, dass Sie ALLE MIGRATIONSREGISTRIERUNGSDATEN LÖSCHEN möchten? Diese Aktion kann nicht rückgängig gemacht werden!",
-                alert_mig_delete_entry_success: "Migrationsregistrierung erfolgreich gelöscht.",
-                alert_data_clear_all_confirm: "ACHTUNG! Sie sind dabei, ALLE DATEN (Beiträge, Ränge, Status, Migration, Info) zu LÖSCHEN. Fortfahren?",
-                alert_data_clear_all_success: "Alle Daten erfolgreich gelöscht! Die Seite wird neu geladen.",
-                
-                footer_text: "© 2025 AOEM 199 von HADES."
-            },
-            zh: {
-                page_title: "AoEM 199 区社群网站",
-                hub_title: "AOEM S199",
-                king_name_prefix: "国王:",
-                menu_home: "主页",
-                menu_ranks: "排名",
-                menu_events: "活动",
-                menu_info: "服务器信息",
-                menu_migration: "移民申请者",
-                menu_login: "管理员登录",
-                menu_admin: "管理员工具",
-
-                home_title: "👑 主页与最新帖子",
-                status_war_title: "服务器战争状态",
-                mig_status_card: "S199 移民接受状态",
-                status_label: "状态",
-                post_loading: "正在加载帖子...",
-                mig_form_title: "🐦‍🔥 移民 S199 申请表",
-                mig_form_note: "如对移民感兴趣，请填写以下资料。",
-                mig_name: "玩家/游戏昵称:",
-                mig_server: "来源服务器:",
-                mig_power: "总战力 (百万):",
-                mig_contact: "联系方式 (Discord/Telegram):",
-                mig_submit: "提交移民申请",
-
-                ranks_title: "📈 玩家排名 (战力与功勋)",
-                ranks_power_card: "战力排名前 5",
-                ranks_merit_card: "功勋排名前 5",
-                tbl_no: "#",
-                tbl_player: "玩家",
-                tbl_alliance: "联盟",
-                tbl_power: "战力",
-                tbl_merit: "功勋",
-                tbl_notes: "备注",
-
-                events_title: "⏳ 全球活动状态",
-                events_current_card: "当前正在进行的活动",
-                status_label_current: "状态",
-                events_note: "最新信息: ---",
-                events_kvk_card: "战争日程",
-
-                info_title: "🌐 199 区信息",
-                info_alliance_card: "主要联盟信息",
-                info_rules_card: "服务器规则",
-
-                mig_status_title: "✈️ 移民 S199 申请者状态",
-                mig_note: "您可以通过**主页**菜单中的表格进行注册。",
-                mig_list_card: "申请者列表 (联系方式已隐藏)",
-                tbl_server_asal: "来源服务器",
-                tbl_power_jt: "战力 (M)",
-                tbl_date: "注册日期",
-
-                admin_title: "🔑 管理员面板",
-                admin_login_card: "管理员登录",
-                btn_login: "登录",
-                btn_logout: "管理员登出",
-                adm_btn_clear_all_data: "清除所有数据 (危险!)",
-                
-                adm_rank_add_title: "添加新排名条目",
-                adm_rank_no: "# 排名:",
-                adm_rank_name: "玩家昵称:",
-                adm_rank_alliance: "联盟名称:",
-                adm_rank_power: "战力 (M):",
-                adm_rank_merit: "功勋:",
-                adm_rank_notes: "备注:",
-                adm_btn_add_rank: "添加条目",
-
-                adm_post_title: "1. 添加/编辑帖子",
-                adm_post_title_label: "帖子标题:",
-                adm_post_content_label: "帖子内容 (文本/图片网址/YouTube 嵌入):",
-                adm_btn_add: "添加帖子",
-                adm_btn_cancel: "取消编辑",
-                adm_post_manage: "管理当前帖子",
-
-                adm_ranks_title: "2. 输入排名数据 (战力/功勋)",
-                adm_ranks_manage: "当前排名数据 (编辑后保存)",
-                adm_btn_save_all_ranks: "保存所有更改",
-                adm_btn_clear_power: "清除战力排名",
-                adm_btn_clear_merit: "清除功勋排名",
-
-                adm_status_event_title: "3. 编辑活动状态",
-                adm_status_event_name: "活跃活动名称:",
-                adm_status_event_status: "活动状态:",
-                adm_status_event_note: "备注 / 附加详情:",
-                adm_btn_update: "更新状态",
-
-                adm_info_title: "4. 编辑服务器信息",
-                adm_info_alliance_label: "主要联盟信息 (使用 HTML 标签):",
-                adm_info_rules_label: "服务器规则 (使用 HTML 标签):",
-                adm_btn_add_update: "添加/更新信息数据",
-
-                adm_mig_status_and_list: "5. 移民注册与状态",
-                adm_status_war: "战争状态:",
-                adm_status_mig: "移民状态:",
-                adm_mig_detail_title: "移民注册数据 (详情 - 清晰联系方式)",
-                tbl_contact: "联系方式 (清晰)",
-                tbl_action: "操作",
-                adm_btn_clear_all: "清除移民列表",
-                
-                adm_kvk_title: "6. 编辑战争日程",
-                adm_kvk_label: "KvK/星际战争日程 (使用 HTML 标签):",
-                adm_btn_save: "保存日程",
-
-                adm_king_title: "7. 编辑国王昵称",
-                adm_king_label: "当前国王昵称:",
-                adm_btn_save_king: "保存国王昵称",
-
-                // Tambahan untuk notifikasi
-                alert_post_add_success: "帖子添加成功。",
-                alert_post_update_success: "帖子更新成功。",
-                alert_post_delete_success: "帖子删除成功。",
-                alert_post_delete_confirm: "确定要删除此帖子吗？",
-                alert_rank_add_success: "排名条目添加成功。请记得保存所有更改。",
-                alert_rank_update_success: "所有排名数据已成功更新并保存。",
-                alert_rank_delete_confirm: (type) => `确定要删除此${type}排名条目吗？`,
-                alert_rank_delete_success: "条目删除成功。",
-                alert_rank_clear_confirm: (type) => `确定要清除所有${type}排名数据吗？`,
-                alert_rank_clear_success: (type) => `${type}排名已成功清除。`,
-                alert_event_update_success: "活动状态更新成功。",
-                alert_server_update_success: "服务器信息更新成功。",
-                alert_kvk_update_success: "战争日程更新成功。",
-                alert_king_update_success: "国王昵称更新成功。",
-                alert_login_success: "登录成功！",
-                alert_login_fail: "密码错误！",
-                alert_logout_success: "您已登出。",
-                alert_mig_form_incomplete: "请填写完整的移民表格信息。",
-                alert_mig_submit_success: "✅ 移民注册成功发送！您的数据将由管理员审核。",
-                alert_mig_delete_confirm: "您确定要删除所有移民注册数据吗？此操作无法撤销！",
-                alert_mig_delete_entry_success: "移民注册数据删除成功。",
-                alert_data_clear_all_confirm: "警告！您将要删除所有数据（帖子、排名、状态、移民、信息）。继续吗？",
-                alert_data_clear_all_success: "所有数据删除成功！页面将重新加载。",
-                
-                footer_text: "© 2025 AOEM 199 作者 HADES。"
-            },
-            ja: {
-                page_title: "AoEM サーバー 199 コミュニティサイト",
-                hub_title: "AOEM S199",
-                king_name_prefix: "国王:",
-                menu_home: "ホーム",
-                menu_ranks: "ランキング",
-                menu_events: "イベント",
-                menu_info: "サーバー情報",
-                menu_migration: "移民登録者",
-                menu_login: "管理者ログイン",
-                menu_admin: "管理者ツール",
-
-                home_title: "👑 ホーム＆最新投稿",
-                status_war_title: "サーバー戦ステータス",
-                mig_status_card: "S199 移民受け入れ状況",
-                status_label: "ステータス",
-                post_loading: "投稿を読み込み中...",
-                mig_form_title: "🐦‍🔥 S199 移民登録フォーム",
-                mig_form_note: "移民にご興味がある方は、以下のデータをご記入ください。",
-                mig_name: "プレイヤー名/ゲーム内名:",
-                mig_server: "元サーバー:",
-                mig_power: "合計戦力 (百万):",
-                mig_contact: "連絡先 (Discord/Telegram):",
-                mig_submit: "移民登録を送信",
-
-                ranks_title: "📈 プレイヤーランキング (戦力＆功績)",
-                ranks_power_card: "戦力ランキング TOP 5",
-                ranks_merit_card: "功績ランキング TOP 5",
-                tbl_no: "#",
-                tbl_player: "プレイヤー",
-                tbl_alliance: "連盟",
-                tbl_power: "戦力",
-                tbl_merit: "功績",
-                tbl_notes: "備考",
-
-                events_title: "⏳ グローバルイベントステータス",
-                events_current_card: "現在開催中のイベント",
-                status_label_current: "ステータス",
-                events_note: "最新情報: ---",
-                events_kvk_card: "戦争スケジュール",
-
-                info_title: "🌐 サーバー 199 情報",
-                info_alliance_card: "主要連盟情報",
-                info_rules_card: "サーバー規約",
-
-                mig_status_title: "✈️ サーバー 199 移民登録者状況",
-                mig_note: "**ホーム**メニューのフォームから登録できます。",
-                mig_list_card: "登録者リスト (連絡先は非表示)",
-                tbl_server_asal: "元サーバー",
-                tbl_power_jt: "戦力 (M)",
-                tbl_date: "登録日",
-
-                admin_title: "🔑 管理者パネル",
-                admin_login_card: "管理者ログイン",
-                btn_login: "ログイン",
-                btn_logout: "管理者ログアウト",
-                adm_btn_clear_all_data: "全データ消去 (危険!)",
-                
-                adm_rank_add_title: "新しいランクエントリを追加",
-                adm_rank_no: "# ランク:",
-                adm_rank_name: "プレイヤー名:",
-                adm_rank_alliance: "連盟名:",
-                adm_rank_power: "戦力 (M):",
-                adm_rank_merit: "功績:",
-                adm_rank_notes: "備考:",
-                adm_btn_add_rank: "エントリを追加",
-
-                adm_post_title: "1. 投稿の追加/編集",
-                adm_post_title_label: "投稿タイトル:",
-                adm_post_content_label: "投稿内容 (テキスト/画像 URL/YouTube埋め込み):",
-                adm_btn_add: "投稿を追加",
-                adm_btn_cancel: "編集をキャンセル",
-                adm_post_manage: "現在の投稿を管理",
-
-                adm_ranks_title: "2. ランクデータの入力 (戦力/功績)",
-                adm_ranks_manage: "現在のランクデータ (編集してから保存)",
-                adm_btn_save_all_ranks: "すべての変更を保存",
-                adm_btn_clear_power: "戦力ランキングをクリア",
-                adm_btn_clear_merit: "功績ランキングをクリア",
-
-                adm_status_event_title: "3. イベントステータスの編集",
-                adm_status_event_name: "アクティブなイベント名:",
-                adm_status_event_status: "イベントステータス:",
-                adm_status_event_note: "注記 / 追加詳細:",
-                adm_btn_update: "ステータスを更新",
-
-                adm_info_title: "4. サーバー情報の編集",
-                adm_info_alliance_label: "主要連盟情報 (HTMLタグを使用):",
-                adm_info_rules_label: "サーバー規約 (HTMLタグを使用):",
-                adm_btn_add_update: "情報データを追加/更新",
-
-                adm_mig_status_and_list: "5. 移民登録とステータス",
-                adm_status_war: "戦争ステータス:",
-                adm_status_mig: "移民ステータス:",
-                adm_mig_detail_title: "移民登録データ (詳細 - 明確な連絡先)",
-                tbl_contact: "連絡先 (明確)",
-                tbl_action: "アクション",
-                adm_btn_clear_all: "移民リストをクリア",
-                
-                adm_kvk_title: "6. 戦争スケジュールを編集",
-                adm_kvk_label: "KvK/星間戦争スケジュール (HTMLタグを使用):",
-                adm_btn_save: "スケジュールを保存",
-
-                adm_king_title: "7. 国王名を編集",
-                adm_king_label: "現在の国王名:",
-                adm_btn_save_king: "国王名を保存",
-
-                // Tambahan untuk notifikasi
-                alert_post_add_success: "投稿が正常に追加されました。",
-                alert_post_update_success: "投稿が正常に更新されました。",
-                alert_post_delete_success: "投稿が正常に削除されました。",
-                alert_post_delete_confirm: "この投稿を削除してもよろしいですか？",
-                alert_rank_add_success: "ランクエントリが正常に追加されました。すべての変更を保存することを忘れないでください。",
-                alert_rank_update_success: "すべてのランキングデータが正常に更新および保存されました。",
-                alert_rank_delete_confirm: (type) => `この${type}ランクエントリを削除してもよろしいですか？`,
-                alert_rank_delete_success: "エントリが正常に削除されました。",
-                alert_rank_clear_confirm: (type) => `すべての${type}ランクデータをクリアしてもよろしいですか？`,
-                alert_rank_clear_success: (type) => `${type}ランキングは正常にクリアされました。`,
-                alert_event_update_success: "イベントステータスが正常に更新されました。",
-                alert_server_update_success: "サーバー情報が正常に更新されました。",
-                alert_kvk_update_success: "戦争スケジュールが正常に更新されました。",
-                alert_king_update_success: "国王名が正常に更新されました。",
-                alert_login_success: "ログイン成功！",
-                alert_login_fail: "パスワードが間違っています！",
-                alert_logout_success: "ログアウトしました。",
-                alert_mig_form_incomplete: "すべての移民フォームフィールドに入力してください。",
-                alert_mig_submit_success: "✅ 移民登録が正常に送信されました！あなたのデータは管理者によってレビューされます。",
-                alert_mig_delete_confirm: "すべての移民登録データを削除してもよろしいですか？この操作は元に戻せません！",
-                alert_mig_delete_entry_success: "移民登録が正常に削除されました。",
-                alert_data_clear_all_confirm: "警告！すべてのデータ（投稿、ランク、ステータス、移民、情報）を削除しようとしています。続行しますか？",
-                alert_data_clear_all_success: "すべてのデータが正常に削除されました！ページがリロードされます。",
-                
-                footer_text: "© 2025 AOEM 199 by HADES."
-            },
-            ru: {
-                page_title: "Сайт сообщества AoEM Сервер 199",
-                hub_title: "AOEM S199",
-                king_name_prefix: "Король:",
-                menu_home: "Главная",
-                menu_ranks: "Рейтинги",
-                menu_events: "События",
-                menu_info: "Информация о сервере",
-                menu_migration: "Зарегистрированные для миграции",
-                menu_login: "Вход для администратора",
-                menu_admin: "Инструменты администратора",
-
-                home_title: "👑 Главная и последние публикации",
-                status_war_title: "СТАТУС ВОЙНЫ СЕРВЕРА",
-                mig_status_card: "Статус принятия миграции S199",
-                status_label: "СТАТУС",
-                post_loading: "Загрузка публикаций...",
-                mig_form_title: "🐦‍🔥 Форма регистрации миграции на S199",
-                mig_form_note: "Пожалуйста, заполните свои данные, если заинтересованы в миграции.",
-                mig_name: "Имя игрока/Имя в игре:",
-                mig_server: "Исходный сервер:",
-                mig_power: "Общая мощь (миллионы):",
-                mig_contact: "Контакт (Discord/Telegram):",
-                mig_submit: "Отправить регистрацию миграции",
-
-                ranks_title: "📈 Рейтинги игроков (Мощь и Заслуги)",
-                ranks_power_card: "Рейтинг мощи ТОП 5",
-                ranks_merit_card: "Рейтинг заслуг ТОП 5",
-                tbl_no: "#",
-                tbl_player: "Игрок",
-                tbl_alliance: "Альянс",
-                tbl_power: "Мощь",
-                tbl_merit: "Заслуги",
-                tbl_notes: "Примечания",
-
-                events_title: "⏳ Статус глобальных событий",
-                events_current_card: "Текущее событие",
-                status_label_current: "Статус",
-                events_note: "Последняя информация: ---",
-                events_kvk_card: "Расписание войн",
-
-                info_title: "🌐 Информация о сервере 199",
-                info_alliance_card: "Основная информация об альянсе",
-                info_rules_card: "Правила сервера",
-
-                mig_status_title: "✈️ Статус зарегистрированных для миграции на сервер 199",
-                mig_note: "Вы можете зарегистрироваться через форму в меню **Главная**.",
-                mig_list_card: "Список зарегистрированных (Контакт скрыт)",
-                tbl_server_asal: "Исходный сервер",
-                tbl_power_jt: "Мощь (М)",
-                tbl_date: "Дата регистрации",
-
-                admin_title: "🔑 Панель администратора",
-                admin_login_card: "Вход для администратора",
-                btn_login: "Войти",
-                btn_logout: "Выйти из админ-панели",
-                adm_btn_clear_all_data: "Очистить все данные (Опасно!)",
-                
-                adm_rank_add_title: "Добавить новую запись рейтинга",
-                adm_rank_no: "# Рейтинг:",
-                adm_rank_name: "Имя игрока:",
-                adm_rank_alliance: "Название альянса:",
-                adm_rank_power: "Мощь (М):",
-                adm_rank_merit: "Заслуги:",
-                adm_rank_notes: "Примечания:",
-                adm_btn_add_rank: "Добавить запись",
-
-                adm_post_title: "1. Добавить/редактировать публикацию",
-                adm_post_title_label: "Заголовок публикации:",
-                adm_post_content_label: "Содержание (Текст/URL изображения/вставка YouTube):",
-                adm_btn_add: "Добавить публикацию",
-                adm_btn_cancel: "Отменить редактирование",
-                adm_post_manage: "Управление текущими публикациями",
-
-                adm_ranks_title: "2. Ввод данных рейтинга (Мощь/Заслуги)",
-                adm_ranks_manage: "Текущие данные рейтинга (Редактировать и Сохранить)",
-                adm_btn_save_all_ranks: "Сохранить все изменения",
-                adm_btn_clear_power: "Очистить рейтинги мощи",
-                adm_btn_clear_merit: "Очистить рейтинги заслуг",
-
-                adm_status_event_title: "3. Редактировать статус события",
-                adm_status_event_name: "Название активного события:",
-                adm_status_event_status: "Статус события:",
-                adm_status_event_note: "Примечание / Дополнительные сведения:",
-                adm_btn_update: "Обновить статус",
-
-                adm_info_title: "4. Редактировать информацию о сервере",
-                adm_info_alliance_label: "Основная информация об альянсе (Использовать HTML-теги):",
-                adm_info_rules_label: "Правила сервера (Использовать HTML-теги):",
-                adm_btn_add_update: "Добавить/обновить данные",
-
-                adm_mig_status_and_list: "5. Регистрация миграции и статус",
-                adm_status_war: "Статус войны:",
-                adm_status_mig: "Статус миграции:",
-                adm_mig_detail_title: "Данные регистрации миграции (ПОДРОБНО - Четкий контакт)",
-                tbl_contact: "Контакт (Четкий)",
-                tbl_action: "Действие",
-                adm_btn_clear_all: "Очистить список миграции",
-                
-                adm_kvk_title: "6. Редактировать расписание войн",
-                adm_kvk_label: "Расписание KvK/Звездной войны (Использовать HTML-теги):",
-                adm_btn_save: "Сохранить расписание",
-
-                adm_king_title: "7. Редактировать имя короля",
-                adm_king_label: "Текущее имя короля:",
-                adm_btn_save_king: "Сохранить имя короля",
-
-                // Tambahan untuk notifikasi
-                alert_post_add_success: "Публикация успешно добавлена.",
-                alert_post_update_success: "Публикация успешно обновлена.",
-                alert_post_delete_success: "Публикация успешно удалена.",
-                alert_post_delete_confirm: "Вы уверены, что хотите удалить эту публикацию?",
-                alert_rank_add_success: "Запись рейтинга успешно добавлена. Не забудьте сохранить все изменения.",
-                alert_rank_update_success: "Все данные рейтинга успешно обновлены и сохранены.",
-                alert_rank_delete_confirm: (type) => `Вы уверены, что хотите удалить эту запись рейтинга ${type}?`,
-                alert_rank_delete_success: "Запись успешно удалена.",
-                alert_rank_clear_confirm: (type) => `Вы уверены, что хотите очистить ВСЕ данные рейтинга ${type}?`,
-                alert_rank_clear_success: (type) => `Рейтинг ${type} успешно очищен.`,
-                alert_event_update_success: "Статус события успешно обновлен.",
-                alert_server_update_success: "Информация о сервере успешно обновлена.",
-                alert_kvk_update_success: "Расписание войн успешно обновлено.",
-                alert_king_update_success: "Имя короля успешно обновлено.",
-                alert_login_success: "Вход успешен!",
-                alert_login_fail: "Неверный пароль!",
-                alert_logout_success: "Вы вышли из системы.",
-                alert_mig_form_incomplete: "Пожалуйста, заполните все поля формы миграции.",
-                alert_mig_submit_success: "✅ Регистрация миграции успешно отправлена! Ваши данные будут проверены Администратором.",
-                alert_mig_delete_confirm: "Вы уверены, что хотите УДАЛИТЬ ВСЕ ДАННЫЕ РЕГИСТРАЦИИ МИГРАЦИИ? Это действие необратимо!",
-                alert_mig_delete_entry_success: "Регистрация миграции успешно удалена.",
-                alert_data_clear_all_confirm: "ВНИМАНИЕ! Вы собираетесь УДАЛИТЬ ВСЕ ДАННЫЕ (Публикации, Рейтинги, Статус, Миграция, Информация). Продолжить?",
-                alert_data_clear_all_success: "Все данные успешно удалены! Страница будет перезагружена.",
-                
-                footer_text: "© 2025 AOEM 199, автор HADES."
-            },
-            ko: {
-                page_title: "AoEM 서버 199 커뮤니티 사이트",
-                hub_title: "AOEM S199",
-                king_name_prefix: "국왕:",
-                menu_home: "홈",
-                menu_ranks: "순위",
-                menu_events: "이벤트",
-                menu_info: "서버 정보",
-                menu_migration: "이주 등록자",
-                menu_login: "관리자 로그인",
-                menu_admin: "관리자 도구",
-
-                home_title: "👑 홈 & 최신 게시물",
-                status_war_title: "서버 전쟁 상태",
-                mig_status_card: "S199 이주 수락 상태",
-                status_label: "상태",
-                post_loading: "게시물 로드 중...",
-                mig_form_title: "🐦‍🔥 S199 이주 등록 양식",
-                mig_form_note: "이주에 관심이 있으시면 아래에 귀하의 데이터를 작성하십시오.",
-                mig_name: "플레이어/인게임 이름:",
-                mig_server: "출발 서버:",
-                mig_power: "총 전력 (백만):",
-                mig_contact: "연락처 (Discord/Telegram):",
-                mig_submit: "이주 등록 제출",
-
-                ranks_title: "📈 플레이어 순위 (전력 및 공훈)",
-                ranks_power_card: "전력 순위 TOP 5",
-                ranks_merit_card: "공훈 순위 TOP 5",
-                tbl_no: "#",
-                tbl_player: "플레이어",
-                tbl_alliance: "연맹",
-                tbl_power: "전력",
-                tbl_merit: "공훈",
-                tbl_notes: "참고",
-
-                events_title: "⏳ 글로벌 이벤트 상태",
-                events_current_card: "현재 진행 중인 이벤트",
-                status_label_current: "상태",
-                events_note: "최신 정보: ---",
-                events_kvk_card: "전쟁 일정",
-
-                info_title: "🌐 서버 199 정보",
-                info_alliance_card: "주요 연맹 정보",
-                info_rules_card: "서버 규칙",
-
-                mig_status_title: "✈️ 서버 199 이주 등록자 상태",
-                mig_note: "**홈** 메뉴의 양식을 통해 등록할 수 있습니다.",
-                mig_list_card: "등록자 목록 (연락처 가려짐)",
-                tbl_server_asal: "출발 서버",
-                tbl_power_jt: "전력 (M)",
-                tbl_date: "등록 날짜",
-
-                admin_title: "🔑 관리자 패널",
-                admin_login_card: "관리자 로그인",
-                btn_login: "로그인",
-                btn_logout: "관리자 로그아웃",
-                adm_btn_clear_all_data: "모든 데이터 지우기 (위험!)",
-                
-                adm_rank_add_title: "새 순위 항목 추가",
-                adm_rank_no: "# 순위:",
-                adm_rank_name: "플레이어 이름:",
-                adm_rank_alliance: "연맹 이름:",
-                adm_rank_power: "전력 (M):",
-                adm_rank_merit: "공훈:",
-                adm_rank_notes: "참고:",
-                adm_btn_add_rank: "항목 추가",
-
-                adm_post_title: "1. 게시물 추가/수정",
-                adm_post_title_label: "게시물 제목:",
-                adm_post_content_label: "게시물 내용 (텍스트/이미지 URL/YouTube 포함):",
-                adm_btn_add: "게시물 추가",
-                adm_btn_cancel: "수정 취소",
-                adm_post_manage: "현재 게시물 관리",
-
-                adm_ranks_title: "2. 순위 데이터 입력 (전력/공훈)",
-                adm_ranks_manage: "현재 순위 데이터 (수정 후 저장)",
-                adm_btn_save_all_ranks: "모든 변경 사항 저장",
-                adm_btn_clear_power: "전력 순위 지우기",
-                adm_btn_clear_merit: "공훈 순위 지우기",
-
-                adm_status_event_title: "3. 이벤트 상태 수정",
-                adm_status_event_name: "활성 이벤트 이름:",
-                adm_status_event_status: "이벤트 상태:",
-                adm_status_event_note: "참고 / 추가 세부 정보:",
-                adm_btn_update: "상태 업데이트",
-
-                adm_info_title: "4. 서버 정보 수정",
-                adm_info_alliance_label: "주요 연맹 정보 (HTML 태그 사용):",
-                adm_info_rules_label: "서버 규칙 (HTML 태그 사용):",
-                adm_btn_add_update: "정보 데이터 추가/업데이트",
-
-                adm_mig_status_and_list: "5. 이주 등록 및 상태",
-                adm_status_war: "전쟁 상태:",
-                adm_status_mig: "이주 상태:",
-                adm_mig_detail_title: "이주 등록 데이터 (세부 정보 - 명확한 연락처)",
-                tbl_contact: "연락처 (명확)",
-                tbl_action: "작업",
-                adm_btn_clear_all: "이주 목록 지우기",
-                
-                adm_kvk_title: "6. 전쟁 일정 수정",
-                adm_kvk_label: "KvK/별의 전쟁 일정 (HTML 태그 사용):",
-                adm_btn_save: "일정 저장",
-
-                adm_king_title: "7. 국왕 이름 수정",
-                adm_king_label: "현재 국왕 이름:",
-                adm_btn_save_king: "국왕 이름 저장",
-
-                // Tambahan untuk notifikasi
-                alert_post_add_success: "게시물이 성공적으로 추가되었습니다.",
-                alert_post_update_success: "게시물이 성공적으로 업데이트되었습니다.",
-                alert_post_delete_success: "게시물이 성공적으로 삭제되었습니다.",
-                alert_post_delete_confirm: "이 게시물을 삭제하시겠습니까?",
-                alert_rank_add_success: "순위 항목이 성공적으로 추가되었습니다. 모든 변경 사항을 저장하는 것을 잊지 마십시오.",
-                alert_rank_update_success: "모든 순위 데이터가 성공적으로 업데이트 및 저장되었습니다.",
-                alert_rank_delete_confirm: (type) => `이 ${type} 순위 항목을 삭제하시겠습니까?`,
-                alert_rank_delete_success: "항목이 성공적으로 삭제되었습니다.",
-                alert_rank_clear_confirm: (type) => `모든 ${type} 순위 데이터를 지우시겠습니까？`,
-                alert_rank_clear_success: (type) => `${type} 순위가 성공적으로 지워졌습니다.`,
-                alert_event_update_success: "이벤트 상태가 성공적으로 업데이트되었습니다.",
-                alert_server_update_success: "서버 정보가 성공적으로 업데이트되었습니다.",
-                alert_kvk_update_success: "전쟁 일정이 성공적으로 업데이트되었습니다.",
-                alert_king_update_success: "국왕 이름이 성공적으로 업데이트되었습니다.",
-                alert_login_success: "로그인 성공!",
-                alert_login_fail: "잘못된 비밀번호!",
-                alert_logout_success: "로그아웃되었습니다.",
-                alert_mig_form_incomplete: "이주 양식의 모든 필드를 작성하십시오.",
-                alert_mig_submit_success: "✅ 이주 등록이 성공적으로 전송되었습니다! 귀하의 데이터는 관리자가 검토할 것입니다.",
-                alert_mig_delete_confirm: "모든 이주 등록 데이터를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다!",
-                alert_mig_delete_entry_success: "이주 등록이 성공적으로 삭제되었습니다。",
-                alert_data_clear_all_confirm: "경고! 모든 데이터(게시물, 순위, 상태, 이주, 정보)를 삭제하려고 합니다. 계속하시겠습니까?",
-                alert_data_clear_all_success: "모든 데이터가 성공적으로 삭제되었습니다! 페이지가 다시 로드됩니다。",
-                
-                footer_text: "© 2025 AOEM 199 by HADES。"
-            }
-        };
-
-        const DEFAULT_DATA = {
-            posts: [
-                { id: 1, title: "Selamat Datang!", content: "Situs Komunitas S199, tempat untuk informasi penting server.", author: "Admin", date: new Date().toLocaleDateString('id-ID'), timestamp: Date.now() - 86400000 },
-            ],
-            powerRanks: [],
-            meritRanks: [],
-            warStatus: "PVE",
-            migStatus: "BUKA", // Default diubah menjadi BUKA
-            kingName: "Nama Raja Belum Ditetapkan",
-            eventStatus: {
-                name: "Nama Event Aktif",
-                status: "SELESAI",
-                note: "Info terakhir: ---"
-            },
-            serverInfo: {
-                alliance: "Tidak ada info aliansi.",
-                rules: "Tidak ada peraturan server."
-            },
-            kvkSchedule: "Jadwal Perang.",
-            migrationList: []
-        };
-
-        function getInitialData() {
-            let data = {};
-            for (const key in DEFAULT_DATA) {
-                const localData = localStorage.getItem(key);
-                data[key] = localData ? JSON.parse(localData) : DEFAULT_DATA[key];
-            }
-            return data;
-        }
-
-        let data = getInitialData();
-
-
-        // --- FUNGSI UTILITY ---
-        function saveToLocalStorage(key, value) {
-            localStorage.setItem(key, JSON.stringify(value));
-            data[key] = value;
-        }
-
-        function getLangString(key, param = null) {
-            const str = LANG_DATA[currentLang][key];
-            if (typeof str === 'function') {
-                return str(param);
-            }
-            return str || key;
-        }
-
-        function clearAllDataPrompt(type) {
-            let message = "";
-            let dataKey = "";
-
-            if (type === 'migration') {
-                message = getLangString('alert_mig_delete_confirm');
-                dataKey = 'migrationList';
-            } else if (type === 'all') {
-                message = getLangString('alert_data_clear_all_confirm');
-                dataKey = 'all';
-            } else {
-                return;
-            }
-
-            if (confirm(message)) {
-                if (dataKey === 'all') {
-                    for (const key in DEFAULT_DATA) {
-                        localStorage.removeItem(key);
-                    }
-                    localStorage.removeItem('isAdmin');
-                    localStorage.removeItem('lang');
-                    alert(getLangString('alert_data_clear_all_success'));
-                    // Reset data object dan reload
-                    data = DEFAULT_DATA; 
-                    window.location.reload();
-                } else {
-                    saveToLocalStorage(dataKey, []);
-                    alert(getLangString('alert_mig_delete_entry_success'));
-                    if (dataKey === 'migrationList') {
-                        renderMigrationList();
-                        renderMigrationListAdmin();
-                    }
-                }
-            }
-        }
-
-        function showSection(sectionId, event) {
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.add('hidden');
-            });
-            document.getElementById(sectionId).classList.remove('hidden');
-
-            document.querySelectorAll('.nav-menu a').forEach(a => {
-                a.classList.remove('active');
-            });
-            
-            const targetElement = event && event.target ? event.target.closest('a') : 
-                                document.querySelector(`.nav-menu a[href="#${sectionId}"]`);
-            if (targetElement) {
-                targetElement.classList.add('active');
-            }
-            
-            const navMenu = document.getElementById('navMenu');
-            if (window.innerWidth <= 768 && navMenu.classList.contains('active')) {
-                toggleMenu(); 
-            }
-            
-            if (sectionId === 'admin' && localStorage.getItem('isAdmin') === 'true') {
-                loadAdminTools();
-            }
-            
-            // Perbarui hash di URL untuk navigasi
-            history.pushState(null, '', `#${sectionId}`);
-            
-            // Scroll ke atas halaman saat pindah section
-            scrollToTop();
-        }
-
-        function toggleMenu() {
-            const navMenu = document.getElementById('navMenu');
-            const menuIcon = document.getElementById('menuIcon');
-            navMenu.classList.toggle('active');
-
-            if (navMenu.classList.contains('active')) {
-                menuIcon.classList.remove('fa-bars');
-                menuIcon.classList.add('fa-times');
-            } else {
-                menuIcon.classList.remove('fa-times');
-                menuIcon.classList.add('fa-bars');
-            }
-        }
-
-        // --- FUNGSI LANGUAGE ---
-        let currentLang = localStorage.getItem('lang') || 'id';
-
-        function changeLanguage(lang) {
-            currentLang = lang;
-            localStorage.setItem('lang', lang);
-            document.getElementById('currentLangBtn').textContent = lang.toUpperCase();
-            
-            // Tutup dropdown
-            document.getElementById('langDropdown').classList.add('hidden');
-            
-            translateElements();
-            
-            // Re-render konten yang dibuat di JS
-            renderRanks();
-            renderMigrationList();
-            renderPosts();
-            
-            if (localStorage.getItem('isAdmin') === 'true') {
-                renderAdminRanks();
-                renderAdminPostList();
-                renderMigrationListAdmin();
-            }
-            updateStatusDisplay();
-        }
-
-        function translateElements() {
-            document.title = getLangString('page_title');
-
-            const elements = document.querySelectorAll('[data-lang-key]');
-            elements.forEach(el => {
-                const key = el.getAttribute('data-lang-key');
-                if (key && LANG_DATA[currentLang] && LANG_DATA[currentLang][key]) {
-                    const value = getLangString(key);
-                    if (el.tagName === 'INPUT' && (el.type === 'submit' || el.type === 'button')) {
-                        el.value = value;
-                    } else {
-                        el.innerHTML = value;
-                    }
-                }
-            });
-
-            // Handle King Prefix Separately
-            const kingPrefix = document.querySelector('.king-prefix');
-            if (kingPrefix) {
-                kingPrefix.textContent = getLangString('king_name_prefix');
-            }
-            
-            // Update label unit ranking admin
-            const powerAdminLabel = document.querySelector('label[for="rankPowerValue"]');
-            if (powerAdminLabel) powerAdminLabel.textContent = getLangString('adm_rank_power');
-        }
-
-        function toggleLangMenu(event) {
-            const dropdown = document.getElementById('langDropdown');
-            dropdown.classList.toggle('hidden');
-            event.stopPropagation();
-        }
-
-        document.addEventListener('click', (e) => {
-            const dropdown = document.getElementById('langDropdown');
-            if (dropdown && !dropdown.classList.contains('hidden') && !e.target.closest('.lang-container')) {
-                dropdown.classList.add('hidden');
-            }
-        });
-
-        function scrollToTop() {
-            document.body.scrollTop = 0; 
-            document.documentElement.scrollTop = 0; 
-        }
-
-        window.onscroll = function() {
-            const btn = document.getElementById("scrollToTopBtn");
-            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-                btn.style.display = "block";
-            } else {
-                btn.style.display = "none";
-            }
-        };
-
-        // --- FUNGSI TAMPILAN (RENDER) ---
-
-        function renderPosts() {
-            const container = document.getElementById('postingsWrapper');
-            if (!container) return;
-            container.innerHTML = '';
-            
-            if (data.posts.length === 0) {
-                container.innerHTML = `<p class="note" style="text-align: center;">${getLangString('post_loading')}</p>`;
-                return;
-            }
-
-            data.posts.sort((a, b) => b.timestamp - a.timestamp); 
-
-            data.posts.forEach(post => {
-                const postDiv = document.createElement('div');
-                postDiv.classList.add('post-item');
-                
-                let formattedContent = post.content;
-                
-                const youtubeRegex = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/))([a-zA-Z0-9_-]{11})/;
-                const match = formattedContent.match(youtubeRegex);
-
-                if (match) {
-                    const videoId = match[1];
-                    formattedContent = `
-                        <div class="video-responsive-container">
-                            <iframe 
-                                src="https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowfullscreen
-                            ></iframe>
-                        </div>
-                    `;
-                }
-                
-                if (!match && (formattedContent.endsWith('.jpg') || formattedContent.endsWith('.png') || formattedContent.endsWith('.gif') || formattedContent.startsWith('http'))) {
-                    const isImage = /\.(jpeg|jpg|png|gif)$/i.test(formattedContent.split('?')[0]);
-                    
-                    if (isImage) {
-                        formattedContent = `<p><img src="${post.content}" alt="Post Image" loading="lazy"></p>`;
-                    } else {
-                        formattedContent = `<p><a href="${post.content}" target="_blank">Link Konten</a></p>`;
-                    }
-                }
-                
-                postDiv.innerHTML = `
-                    <h4>${post.title}</h4>
-                    <div class="post-content">${formattedContent}</div>
-                    <div class="post-meta">Posted by ${post.author} on ${post.date}</div>
-                `;
-                container.appendChild(postDiv);
-            });
-        }
-
-        function renderRanks() {
-            const powerBody = document.getElementById('powerRankBody');
-            const meritBody = document.getElementById('meritRankBody');
-            if (!powerBody || !meritBody) return; 
-
-            powerBody.innerHTML = '';
-            meritBody.innerHTML = '';
-            
-            const powerPlaceholder = `<tr><td colspan="5" class="note" style="text-align: center;">${getLangString('ranks_power_card').replace('TOP 5', '')} ${getLangString('post_loading')}</td></tr>`;
-            const meritPlaceholder = `<tr><td colspan="5" class="note" style="text-align: center;">${getLangString('ranks_merit_card').replace('TOP 5', '')} ${getLangString('post_loading')}</td></tr>`;
-
-            // Pastikan sorting dilakukan setelah data dimuat
-            const sortedPower = [...data.powerRanks].sort((a, b) => (b.power || 0) - (a.power || 0)); 
-            const sortedMerit = [...data.meritRanks].sort((a, b) => (b.merit || 0) - (a.merit || 0));
-
-            sortedPower.slice(0, 5).forEach(rank => {
-                const powerUnit = currentLang === 'id' ? 'Jt' : 'M';
-                powerBody.innerHTML += `
-                    <tr>
-                        <td>${rank.no || '-'}</td>
-                        <td>${rank.name}</td>
-                        <td>${rank.alliance || '-'}</td>
-                        <td>${(rank.power || 0).toLocaleString(currentLang === 'id' ? 'id-ID' : 'en-US')} ${powerUnit}</td>
-                        <td>${rank.notes || '-'}</td>
-                    </tr>
-                `;
-            });
-            if (data.powerRanks.length === 0) {
-                powerBody.innerHTML = powerPlaceholder;
-            }
-
-            sortedMerit.slice(0, 5).forEach(rank => {
-                meritBody.innerHTML += `
-                    <tr>
-                        <td>${rank.no || '-'}</td>
-                        <td>${rank.name}</td>
-                        <td>${rank.alliance || '-'}</td>
-                        <td>${(rank.merit || 0).toLocaleString(currentLang === 'id' ? 'id-ID' : 'en-US')}</td>
-                        <td>${rank.notes || '-'}</td>
-                    </tr>
-                `;
-            });
-            if (data.meritRanks.length === 0) {
-                meritBody.innerHTML = meritPlaceholder;
-            }
-        }
-
-        function updateStatusDisplay() {
-            document.getElementById('currentWarStatus').textContent = data.warStatus.toUpperCase();
-            document.getElementById('currentMigStatus').textContent = data.migStatus.toUpperCase();
-            
-            const migStatus2 = document.getElementById('currentMigStatus2');
-            if(migStatus2) migStatus2.textContent = data.migStatus.toUpperCase();
-            
-            // War Status Coloring
-            const warP = document.getElementById('warStatusP');
-            if (warP) {
-                const warStatusUpper = data.warStatus.toUpperCase();
-                if (warStatusUpper.includes('PVP') || warStatusUpper.includes('WAR') || warStatusUpper.includes('PERANG')) {
-                    warP.style.borderLeft = '5px solid var(--danger-color)';
-                } else {
-                    warP.style.borderLeft = '5px solid var(--safe-color)';
-                }
-            }
-
-            // Migrasi Status Coloring
-            const migP = document.getElementById('migrationStatusP');
-            const migP2 = document.getElementById('migrationStatusP2');
-            
-            let migColor = 'var(--warning-color)';
-            const migStatusUpper = data.migStatus.toUpperCase();
-            if (migStatusUpper.includes('BUKA') || migStatusUpper.includes('OPEN')) {
-                migColor = 'var(--safe-color)';
-            } else if (migStatusUpper.includes('TUTUP') || migStatusUpper.includes('CLOSE')) {
-                migColor = 'var(--danger-color)';
-            } 
-
-            if (migP) migP.style.borderLeft = `5px solid ${migColor}`;
-            if (migP2) migP2.style.borderLeft = `5px solid ${migColor}`;
-
-            const kingNameDisplay = document.getElementById('kingNameDisplay');
-            if(kingNameDisplay) kingNameDisplay.textContent = data.kingName;
-
-            // Event Status
-            const eventName = document.getElementById('currentEventName');
-            const eventStatus = document.getElementById('currentEventStatus');
-            const eventNote = document.getElementById('currentEventNote');
-            
-            if (eventName) eventName.textContent = data.eventStatus.name;
-            if (eventStatus) eventStatus.textContent = data.eventStatus.status.toUpperCase();
-            if (eventNote) eventNote.textContent = data.eventStatus.note;
-
-            // Info Server
-            const allianceInfoContent = document.getElementById('allianceInfoContent');
-            const rulesInfoContent = document.getElementById('rulesInfoContent');
-            const kvkScheduleContent = document.getElementById('kvkScheduleContent');
-            
-            if (allianceInfoContent) allianceInfoContent.innerHTML = data.serverInfo.alliance;
-            if (rulesInfoContent) rulesInfoContent.innerHTML = data.serverInfo.rules;
-            if (kvkScheduleContent) kvkScheduleContent.innerHTML = data.kvkSchedule;
-        }
-
-        // --- FUNGSI MIGRASI ---
-
-        function getMigrationData() {
-            return data.migrationList;
-        }
-
-        function submitMigrationForm() {
-            const name = document.getElementById('migName').value;
-            const server = document.getElementById('migServer').value;
-            const power = document.getElementById('migPower').value;
-            const contact = document.getElementById('migContact').value;
-            
-            if (!name || !server || !power || !contact) {
-                alert(getLangString('alert_mig_form_incomplete'));
-                return false;
-            }
-
-            const currentData = getMigrationData();
-            const newData = {
-                id: Date.now(), 
-                name: name,
-                server: server,
-                power: parseFloat(power),
-                contact: contact,
-                date: new Date().toLocaleDateString(currentLang === 'id' ? 'id-ID' : 'en-US'), 
-            };
-
-            currentData.push(newData);
-            saveToLocalStorage('migrationList', currentData);
-
-            alert(getLangString('alert_mig_submit_success'));
-            document.getElementById('migrationForm').reset();
-            
-            renderMigrationList(); 
-            if (localStorage.getItem('isAdmin') === 'true') {
-                renderMigrationListAdmin(); 
-            }
-            showSection('migrasi');
-            return false; // Mencegah reload form default
-        }
-
-
-        function renderMigrationList() {
-            const listBody = document.getElementById('migrationListPublic');
-            if (!listBody) return;
-
-            listBody.innerHTML = '';
-            const migrationList = getMigrationData();
-
-            if (migrationList.length === 0) {
-                listBody.innerHTML = `<tr><td colspan="5" class="note" style="text-align: center;">${getLangString('mig_list_card').replace(' (Kontak disamarkan)', '').replace(' (Contact obscured)', '')} ${getLangString('post_loading')}</td></tr>`;
-                return;
-            }
-
-            migrationList.forEach((entry, index) => {
-                const powerUnit = currentLang === 'id' ? 'Jt' : 'M';
-
-                listBody.innerHTML += `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${entry.name}</td>
-                        <td>${entry.server}</td>
-                        <td>${(entry.power || 0).toLocaleString(currentLang === 'id' ? 'id-ID' : 'en-US')} ${powerUnit}</td>
-                        <td>${entry.date}</td>
-                    </tr>
-                `;
-            });
-        }
-
-        function renderMigrationListAdmin() {
-            const listBody = document.getElementById('migrationListAdmin');
-            if (!listBody) return;
-
-            listBody.innerHTML = '';
-            const migrationList = getMigrationData();
-
-            if (migrationList.length === 0) {
-                listBody.innerHTML = `<tr><td colspan="7" class="note" style="text-align: center;">${getLangString('mig_list_card').replace(' (Kontak disamarkan)', '').replace(' (Contact obscured)', '')} ${getLangString('post_loading')}</td></tr>`;
-                return;
-            }
-
-            migrationList.forEach((entry, index) => {
-                const powerUnit = currentLang === 'id' ? 'Jt' : 'M';
-                const deleteBtnText = getLangString('tbl_action').replace('Aksi', 'Hapus').replace('Action', 'Delete').replace('操作', '删除');
-
-                listBody.innerHTML += `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${entry.name}</td>
-                        <td>${entry.server}</td>
-                        <td>${(entry.power || 0).toLocaleString(currentLang === 'id' ? 'id-ID' : 'en-US')} ${powerUnit}</td>
-                        <td>${entry.contact}</td>
-                        <td>${entry.date}</td>
-                        <td><button class="btn btn-danger" onclick="deleteMigrationEntry(${entry.id})">${deleteBtnText}</button></td>
-                    </tr>
-                `;
-            });
-        }
-
-        function deleteMigrationEntry(id) {
-            // Pesan konfirmasi yang lebih spesifik
-            if (confirm(getLangString('alert_post_delete_confirm').replace('postingan ini', 'entri migrasi ini').replace('this post', 'this migration entry').replace('esta publicación', 'esta entrada de migración'))) {
-                let migrationList = getMigrationData();
-                migrationList = migrationList.filter(entry => entry.id !== id);
-                saveToLocalStorage('migrationList', migrationList);
-                
-                alert(getLangString('alert_mig_delete_entry_success'));
-                renderMigrationList();
-                renderMigrationListAdmin();
-            }
-        }
-
-
-        // --- FUNGSI ADMIN ---
-
-        const ADMIN_PASS = "199hades"; // Password Admin
-
-        function loginAdmin() {
-            const password = document.getElementById('adminPass').value;
-            const messageElement = document.getElementById('loginMessage');
-
-            if (password === ADMIN_PASS) {
-                localStorage.setItem('isAdmin', 'true');
-                messageElement.textContent = getLangString('alert_login_success');
-                messageElement.style.color = "var(--safe-color)";
-                document.getElementById('loginAdminTab').classList.add('hidden');
-                document.getElementById('adminToolsTab').classList.remove('hidden');
-                document.getElementById('adminPass').value = ''; // Clear password
-                showSection('admin');
-                loadAdminTools();
-            } else {
-                messageElement.textContent = getLangString('alert_login_fail');
-                messageElement.style.color = "var(--danger-color)";
-            }
-        }
-
-        function logoutAdmin() {
-            localStorage.removeItem('isAdmin');
-            document.getElementById('loginAdminTab').classList.remove('hidden');
-            document.getElementById('adminToolsTab').classList.add('hidden');
-            showSection('beranda'); 
-            alert(getLangString('alert_logout_success'));
-        }
-
-        function checkAdminStatus() {
-            if (localStorage.getItem('isAdmin') === 'true') {
-                document.getElementById('loginAdminTab').classList.add('hidden');
-                document.getElementById('adminToolsTab').classList.remove('hidden');
-            } else {
-                document.getElementById('loginAdminTab').classList.remove('hidden');
-                document.getElementById('adminToolsTab').classList.add('hidden');
-            }
-        }
-
-        function loadAdminTools() {
-            renderAdminRanks();
-            renderAdminPostList();
-            loadAdminEventStatus();
-            loadAdminServerInfo();
-            loadAdminStatus();
-            loadAdminKvkSchedule();
-            loadAdminKingName();
-            renderMigrationListAdmin();
-        }
-
-
-        // --- FUNGSI ADMIN POSTING ---
-
-        function submitAdminPost() {
-            const id = document.getElementById('postIdToEdit').value;
-            const title = document.getElementById('postTitle').value;
-            const content = document.getElementById('postContent').value;
-            const isEdit = !!id;
-
-            if (!title || !content) {
-                alert(getLangString('alert_mig_form_incomplete').replace('migrasi', 'postingan').replace('migration', 'post').replace('migración', 'publicación').replace('Migration', 'Post'));
-                return;
-            }
-
-            let posts = data.posts;
-
-            if (isEdit) {
-                const index = posts.findIndex(p => p.id == id);
-                if (index !== -1) {
-                    posts[index].title = title;
-                    posts[index].content = content;
-                    posts[index].timestamp = Date.now();
-                    posts[index].date = new Date().toLocaleDateString(currentLang === 'id' ? 'id-ID' : 'en-US');
-                    alert(getLangString('alert_post_update_success'));
-                }
-            } else {
-                const newPost = {
-                    id: Date.now(),
-                    title: title,
-                    content: content,
-                    author: "Admin", 
-                    date: new Date().toLocaleDateString(currentLang === 'id' ? 'id-ID' : 'en-US'),
-                    timestamp: Date.now()
-                };
-                posts.push(newPost);
-                alert(getLangString('alert_post_add_success'));
-            }
-
-            saveToLocalStorage('posts', posts);
-            document.getElementById('adminPostForm').reset();
-            document.getElementById('postIdToEdit').value = '';
-            document.getElementById('postSubmitBtn').textContent = getLangString('adm_btn_add'); 
-            document.getElementById('cancelEditBtn').classList.add('hidden');
-            
-            renderAdminPostList(); 
-            renderPosts(); 
-        }
-
-        function renderAdminPostList() {
-            const listDiv = document.getElementById('adminPostList');
-            if (!listDiv) return;
-
-            listDiv.innerHTML = '';
-            
-            if (data.posts.length === 0) {
-                listDiv.innerHTML = `<p class="note">${getLangString('adm_post_manage').replace('Saat Ini', '')} ${getLangString('post_loading')}</p>`;
-                return;
-            }
-
-            data.posts.sort((a, b) => b.timestamp - a.timestamp); 
-
-            data.posts.forEach(post => {
-                const editBtnText = getLangString('menu_admin').replace('Tools', 'Edit').replace('도구', '수정').replace('Herramientas de Admin', 'Editar').replace('Admin Tools', 'Edit').replace('Инструменты администратора', 'Редактировать');
-                const deleteBtnText = getLangString('tbl_action').replace('Aksi', 'Hapus').replace('Action', 'Delete').replace('操作', '删除').replace('Действие', 'Удалить');
-                
-                listDiv.innerHTML += `
-                    <div class="post-item" style="border-left: 5px solid var(--secondary-color); margin-top: 10px;">
-                        <p><strong>${post.title}</strong> (${post.date})</p>
-                        <button class="btn btn-secondary" onclick="editPost(${post.id})">${editBtnText}</button>
-                        <button class="btn btn-danger" onclick="deletePost(${post.id})" style="margin-left: 10px;">${deleteBtnText}</button>
-                    </div>
-                `;
-            });
-        }
-
-        function deletePost(id) {
-            if (confirm(getLangString('alert_post_delete_confirm'))) {
-                let posts = data.posts.filter(p => p.id !== id);
-                saveToLocalStorage('posts', posts);
-                renderAdminPostList();
-                renderPosts();
-                alert(getLangString('alert_post_delete_success'));
-            }
-        }
-
-        function editPost(id) {
-            const post = data.posts.find(p => p.id == id);
-            if (post) {
-                document.getElementById('postIdToEdit').value = post.id;
-                document.getElementById('postTitle').value = post.title;
-                document.getElementById('postContent').value = post.content;
-                document.getElementById('postSubmitBtn').textContent = getLangString('adm_btn_save');
-                document.getElementById('cancelEditBtn').classList.remove('hidden');
-                document.getElementById('postTitle').focus();
-                window.scrollTo(0, 0); 
-            }
-        }
-
-        function cancelEditPost() {
-            document.getElementById('adminPostForm').reset();
-            document.getElementById('postIdToEdit').value = '';
-            document.getElementById('postSubmitBtn').textContent = getLangString('adm_btn_add'); 
-            document.getElementById('cancelEditBtn').classList.add('hidden');
-        }
-
-
-        // --- FUNGSI ADMIN RANK ---
-
-        function addRankEntry() {
-            const rankNo = document.getElementById('rankNo').value;
-            const rankName = document.getElementById('rankName').value;
-            const rankAlliance = document.getElementById('rankAlliance').value;
-            const rankPowerValue = document.getElementById('rankPowerValue').value;
-            const rankMeritValue = document.getElementById('rankMeritValue').value;
-            const rankNotes = document.getElementById('rankNotes').value;
-
-            if (!rankName) {
-                alert(getLangString('adm_rank_name') + ' ' + getLangString('alert_mig_form_incomplete').replace('migrasi', 'ranking').replace('migration', 'rank'));
-                return;
-            }
-            
-            // Gunakan id unik untuk tiap entri
-            const newId = Date.now(); 
-
-            const baseEntry = {
-                id: newId,
-                no: parseInt(rankNo) || 0,
-                name: rankName,
-                alliance: rankAlliance,
-                notes: rankNotes
-            };
-
-            let powerRanks = data.powerRanks;
-            let meritRanks = data.meritRanks;
-            
-            // Simpan Power Entry
-            const powerValue = parseFloat(rankPowerValue) || 0;
-            if (powerValue > 0) {
-                const powerEntry = { ...baseEntry, power: powerValue, merit: 0 };
-                // Hapus entri lama dengan nama yang sama jika ada (untuk rank player, bukan id)
-                powerRanks = powerRanks.filter(r => r.name.toLowerCase() !== rankName.toLowerCase());
-                powerRanks.push(powerEntry);
-                saveToLocalStorage('powerRanks', powerRanks);
-            }
-            
-            // Simpan Merit Entry
-            const meritValue = parseFloat(rankMeritValue) || 0;
-            if (meritValue > 0) {
-                const meritEntry = { ...baseEntry, power: 0, merit: meritValue };
-                // Hapus entri lama dengan nama yang sama jika ada (untuk rank player, bukan id)
-                meritRanks = meritRanks.filter(r => r.name.toLowerCase() !== rankName.toLowerCase());
-                meritRanks.push(meritEntry);
-                saveToLocalStorage('meritRanks', meritRanks);
-            }
-
-            document.getElementById('adminRankInputForm').reset();
-            document.getElementById('rankNo').value = 0;
-            document.getElementById('rankPowerValue').value = 0;
-            document.getElementById('rankMeritValue').value = 0;
-            
-            alert(getLangString('alert_rank_add_success'));
-            renderAdminRanks();
-            renderRanks(); 
-        }
-
-        function renderAdminRanks() {
-            const container = document.getElementById('adminRankListContainer');
-            if (!container) return;
-
-            container.innerHTML = '';
-            
-            const powerRanks = data.powerRanks;
-            const meritRanks = data.meritRanks;
-
-            // Sort by descending power/merit first, then by 'no' if available. 
-            const sortedPower = [...powerRanks].sort((a, b) => (b.power || 0) - (a.power || 0)); 
-            const sortedMerit = [...meritRanks].sort((a, b) => (b.merit || 0) - (a.merit || 0)); 
-
-            const createTable = (list, type) => {
-                const powerUnit = currentLang === 'id' ? 'Jt' : 'M';
-                const deleteBtnText = getLangString('tbl_action').replace('Aksi', 'Hapus').replace('Action', 'Delete').replace('操作', '删除').replace('Действие', 'Удалить');
-
-                let html = `
-                    <h4>${type === 'power' ? getLangString('ranks_power_card').replace('TOP 5', '') : getLangString('ranks_merit_card').replace('TOP 5', '')} (${list.length} ${getLangString('tbl_player')})</h4>
-                    <div class="data-table-container">
-                    <table class="data-table admin-rank-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 40px;" data-lang-key="tbl_no">${getLangString('tbl_no')}</th>
-                                <th style="width: 120px;" data-lang-key="tbl_player">${getLangString('tbl_player')}</th>
-                                <th style="width: 80px;" data-lang-key="tbl_alliance">${getLangString('tbl_alliance')}</th>
-                                <th style="width: 70px;" data-lang-key="${type === 'power' ? 'tbl_power' : 'tbl_merit'}">${type === 'power' ? getLangString('tbl_power') + ' ('+powerUnit+')' : getLangString('tbl_merit')}</th>
-                                <th data-lang-key="tbl_notes">${getLangString('tbl_notes')}</th>
-                                <th style="width: 60px;" data-lang-key="tbl_action">${getLangString('tbl_action')}</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin${type}RankBody">
-                `;
-                
-                list.forEach((rank) => {
-                    const displayValue = type === 'power' ? (rank.power || 0) : (rank.merit || 0);
-                    html += `
-                        <tr data-id="${rank.id}" data-type="${type}">
-                            <td><input type="number" class="admin-rank-no" value="${rank.no || 0}" min="0"></td>
-                            <td><input type="text" class="admin-rank-name" value="${rank.name}"></td>
-                            <td><input type="text" class="admin-rank-alliance" value="${rank.alliance || ''}"></td>
-                            <td><input type="number" class="admin-rank-value" value="${displayValue}" min="0" step="${type === 'power' ? '0.1' : '1'}"></td>
-                            <td><input type="text" class="admin-rank-notes" value="${rank.notes || ''}"></td>
-                            <td><button class="btn btn-danger" onclick="deleteRankEntry(${rank.id}, '${type}')">${deleteBtnText}</button></td>
-                        </tr>
-                    `;
-                });
-                html += `</tbody></table></div>`;
-                return html;
-            };
-
-            container.innerHTML += createTable(sortedPower, 'power');
-            container.innerHTML += createTable(sortedMerit, 'merit');
-            
-            if (data.powerRanks.length === 0 && data.meritRanks.length === 0) {
-                container.innerHTML = `<p class="note">${getLangString('adm_ranks_manage').replace('Saat Ini (Edit lalu Simpan)', '')} ${getLangString('post_loading')}</p>`;
-            }
-            translateElements();
-        }
-
-        function updateRankDataAdmin() {
-            const newPowerRanks = [];
-            const newMeritRanks = [];
-            
-            // Mengumpulkan semua baris Power
-            document.querySelectorAll('#adminpowerRankBody tr').forEach(row => {
-                const id = parseInt(row.getAttribute('data-id'));
-                const no = parseInt(row.querySelector('.admin-rank-no').value);
-                const name = row.querySelector('.admin-rank-name').value;
-                const alliance = row.querySelector('.admin-rank-alliance').value;
-                const powerValue = parseFloat(row.querySelector('.admin-rank-value').value);
-                const notes = row.querySelector('.admin-rank-notes').value;
-                
-                if (name && !isNaN(powerValue) && powerValue > 0) {
-                    newPowerRanks.push({
-                        id: id,
-                        no: no,
-                        name: name,
-                        alliance: alliance,
-                        power: powerValue,
-                        merit: 0, 
-                        notes: notes
-                    });
-                }
-            });
-
-            // Mengumpulkan semua baris Merit
-            document.querySelectorAll('#adminmeritRankBody tr').forEach(row => {
-                const id = parseInt(row.getAttribute('data-id'));
-                const no = parseInt(row.querySelector('.admin-rank-no').value);
-                const name = row.querySelector('.admin-rank-name').value;
-                const alliance = row.querySelector('.admin-rank-alliance').value;
-                const meritValue = parseFloat(row.querySelector('.admin-rank-value').value);
-                const notes = row.querySelector('.admin-rank-notes').value;
-
-                if (name && !isNaN(meritValue) && meritValue > 0) {
-                    newMeritRanks.push({
-                        id: id,
-                        no: no,
-                        name: name,
-                        alliance: alliance,
-                        power: 0, 
-                        merit: meritValue,
-                        notes: notes
-                    });
-                }
-            });
-
-
-            saveToLocalStorage('powerRanks', newPowerRanks); 
-            saveToLocalStorage('meritRanks', newMeritRanks); 
-            
-            alert(getLangString('alert_rank_update_success'));
-            renderAdminRanks();
-            renderRanks();
-        }
-
-        function deleteRankEntry(id, type) {
-            if (confirm(getLangString('alert_rank_delete_confirm', type))) {
-                let rankList = data[`${type}Ranks`];
-                rankList = rankList.filter(entry => entry.id !== id);
-                
-                saveToLocalStorage(`${type}Ranks`, rankList);
-                
-                renderAdminRanks();
-                renderRanks();
-                alert(getLangString('alert_rank_delete_success'));
-            }
-        }
-
-        function clearRankDataPrompt(type) {
-            if (confirm(getLangString('alert_rank_clear_confirm', type))) {
-                saveToLocalStorage(`${type}Ranks`, []);
-                alert(getLangString('alert_rank_clear_success', type));
-                renderAdminRanks();
-                renderRanks();
-            }
-        }
-
-        // --- FUNGSI ADMIN STATUS ---
-
-        function updateEventStatusAdmin() {
-            const name = document.getElementById('admEventName').value;
-            const status = document.getElementById('admEventStatus').value;
-            const note = document.getElementById('admEventNote').value;
-
-            const newStatus = { name, status, note };
-            saveToLocalStorage('eventStatus', newStatus);
-            alert(getLangString('alert_event_update_success'));
-            loadAdminEventStatus();
-            updateStatusDisplay();
-        }
-
-        function loadAdminEventStatus() {
-            const name = document.getElementById('admEventName');
-            const status = document.getElementById('admEventStatus');
-            const note = document.getElementById('admEventNote');
-            
-            if (name) name.value = data.eventStatus.name;
-            if (status) status.value = data.eventStatus.status;
-            if (note) note.value = data.eventStatus.note;
-        }
-
-        function updateWarMigStatusAdmin() {
-            const warStatus = document.getElementById('admWarStatus').value;
-            const migStatus = document.getElementById('admMigStatus').value;
-
-            saveToLocalStorage('warStatus', warStatus);
-            saveToLocalStorage('migStatus', migStatus);
-            alert(getLangString('adm_status_war').replace('Status War:', 'Status') + ' & ' + getLangString('adm_status_mig').replace('Status Migrasi:', 'Status') + ' ' + getLangString('alert_event_update_success'));
-            loadAdminStatus();
-            updateStatusDisplay();
-        }
-
-        function loadAdminStatus() {
-            const war = document.getElementById('admWarStatus');
-            const mig = document.getElementById('admMigStatus');
-            
-            if (war) war.value = data.warStatus;
-            if (mig) mig.value = data.migStatus;
-        }
-
-
-        // --- FUNGSI ADMIN INFO & JADWAL ---
-
-        function updateServerInfoAdmin() {
-            const alliance = document.getElementById('admAllianceInfo').value;
-            const rules = document.getElementById('admRulesInfo').value;
-
-            const newInfo = { alliance, rules };
-            saveToLocalStorage('serverInfo', newInfo);
-            alert(getLangString('alert_server_update_success'));
-            loadAdminServerInfo();
-            updateStatusDisplay();
-        }
-
-        function loadAdminServerInfo() {
-            const alliance = document.getElementById('admAllianceInfo');
-            const rules = document.getElementById('admRulesInfo');
-            
-            if (alliance) alliance.value = data.serverInfo.alliance;
-            if (rules) rules.value = data.serverInfo.rules;
-        }
-
-        function updateKvkScheduleAdmin() {
-            const kvkSchedule = document.getElementById('admKvkSchedule').value;
-            saveToLocalStorage('kvkSchedule', kvkSchedule);
-            alert(getLangString('alert_kvk_update_success'));
-            loadAdminKvkSchedule();
-            updateStatusDisplay();
-        }
-
-        function loadAdminKvkSchedule() {
-            const kvkSchedule = document.getElementById('admKvkSchedule');
-            if (kvkSchedule) kvkSchedule.value = data.kvkSchedule;
-        }
-
-        function updateKingNameAdmin() {
-            const kingName = document.getElementById('admKingName').value;
-            saveToLocalStorage('kingName', kingName);
-            alert(getLangString('alert_king_update_success'));
-            loadAdminKingName();
-            updateStatusDisplay();
-        }
-
-        function loadAdminKingName() {
-            const kingName = document.getElementById('admKingName');
-            if (kingName) kingName.value = data.kingName;
-        }
-
-
-        // --- INITIALIZATION & EVENT LISTENERS ---
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // 1. Set bahasa awal dan terjemahkan semua elemen
-            changeLanguage(currentLang);
-            
-            // 2. Load data dan tampilkan status (King Name, War, Migrasi, Event)
-            updateStatusDisplay();
-            
-            // 3. Render konten dinamis (Postingan, Ranks, Migrasi Publik)
-            renderPosts();
-            renderRanks();
-            renderMigrationList(); 
-            
-            // 4. Cek status Admin dan tampilkan/sembunyikan menu/section
-            checkAdminStatus(); 
-
-            // 5. Setup event listener untuk form migrasi (mencegah reload default)
-            const migrationForm = document.getElementById('migrationForm');
-            if(migrationForm) {
-                migrationForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    submitMigrationForm();
-                });
-            }
-
-            // 6. Tampilkan section yang benar saat load (berdasarkan hash atau default)
-            const urlHash = window.location.hash.replace('#', '');
-            let initialSectionId = 'beranda';
-            
-            if (urlHash) {
-                // Cek apakah hash sesuai dengan ID section yang ada
-                const validSections = ['beranda', 'ranks', 'events', 'info', 'migrasi', 'login', 'admin'];
-                if (validSections.includes(urlHash)) {
-                    initialSectionId = urlHash;
-                }
-            } else if (localStorage.getItem('isAdmin') === 'true' && document.getElementById('admin')) {
-                initialSectionId = 'admin';
-            }
-
-            if (document.getElementById(initialSectionId)) {
-                // Panggil showSection tanpa event
-                showSection(initialSectionId); 
-            }
-            
-            // 7. Waktu Server (UTC)
-            setInterval(() => {
-                const now = new Date();
-                // Gunakan toLocaleString dengan konfigurasi untuk mendapatkan waktu UTC
-                const formattedTime = now.toLocaleTimeString('en-US', { 
-                    hour: '2-digit', 
-                    minute: '2-digit', 
-                    second: '2-digit', 
-                    hour12: false,
-                    timeZone: 'UTC'
-                });
-                
-                const serverTimeElement = document.getElementById('serverTime');
-                if (serverTimeElement) {
-                    serverTimeElement.textContent = `${formattedTime} UTC`;
-                }
-            }, 1000);
-        });
-    </script>
+            <div class="card">
+              <h4>Status War & Migrasi</h4>
+              <label>War:</label><input id="admWarStatus">
+              <label>Migrasi:</label><input id="admMigStatus">
+              <button class="btn-primary" onclick="saveMigrationStatus()">Simpan</button>
+            </div>
+
+            <div class="card">
+              <h4>Jadwal KvK</h4>
+              <textarea id="admKvkSchedule"></textarea>
+              <button class="btn-primary" onclick="saveKvkSchedule()">Simpan</button>
+            </div>
+
+            <div class="card">
+              <h4>Nama Raja</h4>
+              <input id="admKingName"><button class="btn-primary" onclick="saveKingName()">Simpan</button>
+            </div>
+          </div>
+
+          <!-- Settings -->
+          <div id="admin-settings" class="admin-panel hidden">
+            <h2>Pengaturan</h2>
+            <div class="card">
+              <p>Beberapa pengaturan lanjutan akan tampil di sini.</p>
+            </div>
+          </div>
+
+        </div> <!-- admin-main -->
+      </div> <!-- admin-shell -->
+    </section>
+
+  </main>
+
+  <footer class="footer">© 2025 AOEM 199 — By HADES</footer>
+
+  <!-- Firebase config (you provided) -->
+  <script>
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyBZh7wfBvEbtm-55FKWtFc2P1G04Izp4sQ",
+      authDomain: "aoem199.firebaseapp.com",
+      databaseURL: "https://aoem199-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "aoem199",
+      storageBucket: "aoem199.firebasestorage.app",
+      messagingSenderId: "954949340074",
+      appId: "1:954949340074:web:17a5342efdc216e213f9d3",
+      measurementId: "G-GLTTPS0WET"
+    };
+  </script>
+
+  <script src="script.js"></script>
 </body>
 </html>
-2
