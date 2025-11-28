@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AOEM S199 — Admin Control Panel</title>
 
   <link rel="stylesheet" href="style.css">
@@ -14,16 +14,17 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 </head>
+
 <body>
 
   <div class="smoke"></div>
-  <div class="embers" aria-hidden="true"></div>
+  <div class="embers"></div>
 
   <!-- Confirm Modal -->
-  <div id="confirmModal" class="modal hidden" role="dialog" aria-modal="true">
+  <div id="confirmModal" class="modal hidden">
     <div class="modal-content">
       <h3>Konfirmasi</h3>
-      <p id="confirmText">Apakah Anda yakin ingin menghapus?</p>
+      <p id="confirmText">Apakah Anda yakin?</p>
       <div class="modal-actions">
         <button id="confirmYes" class="btn-danger">Ya</button>
         <button id="confirmNo" class="btn-secondary" onclick="closeConfirm()">Batal</button>
@@ -35,7 +36,7 @@
   <header class="header">
     <div class="container header-box">
       <div class="header-left">
-        <img id="headerLogo" class="header-logo" src="" alt="Logo">
+        <img id="headerLogo" class="header-logo" src="">
         <div>
           <h1>AOEM S199</h1>
           <div class="king-name">Raja: <span id="kingNameDisplay">Belum Ditentukan</span></div>
@@ -44,12 +45,14 @@
 
       <div class="header-right">
         <div id="serverTime" class="server-time">UTC --:--:--</div>
-        <button class="menu-btn" onclick="toggleMenu()"><i id="menuIcon" class="fa-solid fa-bars"></i></button>
+        <button class="menu-btn" onclick="toggleMenu()">
+          <i id="menuIcon" class="fa-solid fa-bars"></i>
+        </button>
       </div>
     </div>
   </header>
 
-  <!-- Nav -->
+  <!-- Navigation -->
   <nav class="nav-area">
     <ul id="navMenu" class="nav-list">
       <li><button onclick="switchTab('home')">🏠 Home</button></li>
@@ -58,7 +61,7 @@
       <li><button onclick="switchTab('info')">🌐 Info</button></li>
       <li><button onclick="switchTab('migration')">✈️ Migrasi</button></li>
       <li><button onclick="switchTab('login')">🔑 Admin</button></li>
-      <li><button id="adminTab" class="hidden" onclick="switchTab('admin')">🛠️ Admin</button></li>
+      <li><button id="adminTab" class="hidden" onclick="switchTab('admin')">🛠 Admin</button></li>
     </ul>
   </nav>
 
@@ -74,6 +77,7 @@
           <h3>Status War</h3>
           <div class="status-item"><span>Status:</span><span id="warStatus">PVE</span></div>
         </div>
+
         <div class="card">
           <h3>Status Migrasi</h3>
           <div class="status-item"><span>Status:</span><span id="migStatus">-</span></div>
@@ -84,7 +88,7 @@
         <h3>Highlight</h3>
         <div id="postSlider" class="post-slider">
           <button class="slider-btn left" onclick="sliderPrev()">‹</button>
-          <div class="slider-track" id="sliderTrack"></div>
+          <div id="sliderTrack" class="slider-track"></div>
           <button class="slider-btn right" onclick="sliderNext()">›</button>
         </div>
       </div>
@@ -98,258 +102,365 @@
         <form id="migForm">
           <label>Nama:</label><input type="text" id="migName" required>
           <label>Server asal:</label><input type="text" id="migServer" required>
-          <label>Power (angka):</label><input type="number" id="migPower" required>
+          <label>Power:</label><input type="number" id="migPower" required>
           <label>Kontak:</label><input type="text" id="migContact" required>
           <button class="btn-primary" type="submit">Kirim</button>
         </form>
       </div>
     </section>
-
-    <!-- RANKS -->
+<!-- RANKS -->
     <section id="ranks" class="page-section hidden">
       <h2>📊 Ranking</h2>
+
       <div class="card">
         <h3>Power Ranking</h3>
-        <table class="data-table"><thead><tr><th>#</th><th>Nama</th><th>Aliansi</th><th>Power</th></tr></thead><tbody id="powerList"></tbody></table>
+        <table class="data-table">
+          <thead>
+            <tr><th>#</th><th>Nama</th><th>Aliansi</th><th>Power</th></tr>
+          </thead>
+          <tbody id="powerList"></tbody>
+        </table>
       </div>
 
       <div class="card">
         <h3>Merit Ranking</h3>
-        <table class="data-table"><thead><tr><th>#</th><th>Nama</th><th>Aliansi</th><th>Merit</th></tr></thead><tbody id="meritList"></tbody></table>
+        <table class="data-table">
+          <thead>
+            <tr><th>#</th><th>Nama</th><th>Aliansi</th><th>Merit</th></tr>
+          </thead>
+          <tbody id="meritList"></tbody>
+        </table>
       </div>
     </section>
 
     <!-- EVENTS -->
     <section id="events" class="page-section hidden">
       <h2>⏳ Event Global</h2>
+
       <div class="card">
         <h3>Status Event</h3>
         <p><b>Event:</b> <span id="eventName">-</span></p>
         <p><b>Status:</b> <span id="eventStatus">-</span></p>
         <p id="eventNote">-</p>
       </div>
-      <div class="card"><h3>Jadwal KvK</h3><div id="kvkSchedule">-</div></div>
+
+      <div class="card">
+        <h3>Jadwal KvK</h3>
+        <div id="kvkSchedule">-</div>
+      </div>
     </section>
 
     <!-- INFO -->
     <section id="info" class="page-section hidden">
       <h2>🌐 Info Server</h2>
-      <div class="card"><h3>Info Aliansi</h3><div id="allianceInfo">-</div></div>
-      <div class="card"><h3>Peraturan</h3><div id="rulesInfo">-</div></div>
+
+      <div class="card">
+        <h3>Info Aliansi</h3>
+        <div id="allianceInfo">-</div>
+      </div>
+
+      <div class="card">
+        <h3>Peraturan</h3>
+        <div id="rulesInfo">-</div>
+      </div>
     </section>
 
-    <!-- MIGRATION PUBLIC -->
+    <!-- MIGRASI -->
     <section id="migration" class="page-section hidden">
       <h2>✈️ Daftar Pendaftar Migrasi</h2>
       <div class="card">
         <table class="data-table">
-          <thead><tr><th>#</th><th>Nama</th><th>Server</th><th>Power</th><th>Tanggal</th></tr></thead>
+          <thead>
+            <tr><th>#</th><th>Nama</th><th>Server</th><th>Power</th><th>Tanggal</th></tr>
+          </thead>
           <tbody id="migTablePublic"></tbody>
         </table>
       </div>
     </section>
 
-    <!-- LOGIN ADMIN -->
+    <!-- LOGIN -->
     <section id="login" class="page-section hidden">
       <h2>🔑 Login Admin</h2>
+
       <div class="card">
         <form onsubmit="event.preventDefault(); adminLogin();">
-          <label>Email Admin:</label><input type="email" id="adminEmail" required>
-          <label>Password:</label><input type="password" id="adminPass" required>
+          <label>Email Admin:</label>
+          <input type="email" id="adminEmail" required>
+
+          <label>Password:</label>
+          <input type="password" id="adminPass" required>
+
           <button class="btn-primary">Login</button>
         </form>
+
         <p id="loginMsg"></p>
       </div>
     </section>
 
-    <!-- ADMIN (FULL CONTROL PANEL) -->
+    <!-- ================= ADMIN PANEL ================= -->
+
     <section id="admin" class="page-section hidden">
-      <div class="admin-shell">
+
+      <div class="admin-wrapper">
+
+        <!-- SIDEBAR -->
         <aside class="admin-sidebar">
-          <div class="sidebar-brand"><img id="sidebarLogo" src="" alt="logo"><h3>AOEM Admin</h3></div>
-          <nav class="sidebar-nav">
-            <button onclick="adminShow('dashboard')" class="active">Dashboard</button>
-            <button onclick="adminShow('posts')">Posting</button>
-            <button onclick="adminShow('ranks')">Ranks</button>
+          <img id="sidebarLogo" class="sidebar-logo" src="">
+          <h3>Admin Panel</h3>
+
+          <div class="sidebar-nav">
+            <button onclick="adminShow('dashboard')">Dashboard</button>
+            <button onclick="adminShow('posts')">Postingan</button>
+            <button onclick="adminShow('ranks')">Ranking</button>
             <button onclick="adminShow('migrations')">Migrasi</button>
-            <button onclick="adminShow('files')">Wallpaper & Logo</button>
-            <button onclick="adminShow('admins')">Admins</button>
-            <button onclick="adminShow('server')">Server & Events</button>
-            <button onclick="adminShow('settings')">Settings</button>
+            <button onclick="adminShow('files')">Upload</button>
+            <button onclick="adminShow('admins')">Admin</button>
+            <button onclick="adminShow('server')">Server Info</button>
+            <button onclick="adminShow('settings')">Pengaturan</button>
             <button class="btn-danger" onclick="adminLogout()">Logout</button>
-          </nav>
+          </div>
         </aside>
 
-        <div class="admin-main">
-          <!-- Dashboard -->
+        <!-- CONTENT -->
+        <div class="admin-content">
+
+          <!-- DASHBOARD -->
           <div id="admin-dashboard" class="admin-panel">
-            <h2>Dashboard</h2>
-            <div class="cards-grid">
-              <div class="card"><h3>Total Post</h3><div id="statPosts">-</div></div>
-              <div class="card"><h3>Total Rank</h3><div id="statRanks">-</div></div>
-              <div class="card"><h3>Total Migrasi</h3><div id="statMigs">-</div></div>
+            <h2>📊 Dashboard</h2>
+
+            <div class="stats-grid">
+              <div class="stat-box">
+                <h3>Total Postingan</h3>
+                <div id="statPosts">0</div>
+              </div>
+
+              <div class="stat-box">
+                <h3>Total Ranking</h3>
+                <div id="statRanks">0</div>
+              </div>
+
+              <div class="stat-box">
+                <h3>Total Migrasi</h3>
+                <div id="statMigs">0</div>
+              </div>
             </div>
           </div>
 
-          <!-- Posts manager -->
+          <!-- POSTS ADMIN -->
           <div id="admin-posts" class="admin-panel hidden">
-            <h2>Postingan</h2>
-            <div class="card">
-              <form id="postForm" onsubmit="event.preventDefault(); submitPost();">
-                <input type="hidden" id="editPostId">
-                <label>Judul:</label><input id="postTitle">
-                <label>Isi / URL gambar:</label><textarea id="postContent"></textarea>
-                <label><input type="checkbox" id="postFeatured"> Tandai sebagai featured (slider)</label>
-                <button class="btn-primary" type="submit">Simpan</button>
-                <button id="cancelEditBtn" class="btn-secondary hidden" onclick="cancelEditPost()">Batalkan</button>
-              </form>
+            <h2>📝 Kelola Postingan</h2>
+
+            <div class="form-grid">
+              <input type="hidden" id="editPostId">
+
+              <label>Judul:</label>
+              <input id="postTitle" type="text">
+
+              <label>Isi / URL Gambar:</label>
+              <textarea id="postContent"></textarea>
+
+              <label>Featured:</label>
+              <input id="postFeatured" type="checkbox">
+
+              <div>
+                <label>Upload Gambar:</label>
+                <input type="file" id="postImageInput">
+                <button class="btn-secondary" onclick="uploadPostImage()">Upload</button>
+                <div id="uploadImageStatus"></div>
+              </div>
+
+              <button class="btn-primary" onclick="submitPost()">Simpan</button>
+              <button id="cancelEditBtn" class="btn-secondary hidden" onclick="cancelEditPost()">Batal Edit</button>
             </div>
-            <h4>Daftar Post</h4>
+
+            <hr>
+
+            <h3>Daftar Postingan</h3>
             <div id="adminPostList"></div>
           </div>
 
-          <!-- Ranks manager -->
+          <!-- RANKS ADMIN -->
           <div id="admin-ranks" class="admin-panel hidden">
-            <h2>Ranks</h2>
-            <div class="card">
-              <form id="rankForm" onsubmit="event.preventDefault(); addOrUpdateRank();">
-                <input type="hidden" id="editRankId">
-                <label>Nama:</label><input id="rankName">
-                <label>Aliansi:</label><input id="rankAlliance">
-                <label>Power:</label><input id="rankPower" type="number">
-                <label>Merit:</label><input id="rankMerit" type="number">
-                <button class="btn-primary">Simpan Rank</button>
-                <button id="cancelRankEditBtn" class="btn-secondary hidden" onclick="cancelEditRank()">Batal</button>
-              </form>
+            <h2>🏅 Kelola Ranking</h2>
+
+            <div class="form-grid">
+              <input type="hidden" id="editRankId">
+
+              <label>Nama:</label>
+              <input id="rankName" type="text">
+
+              <label>Aliansi:</label>
+              <input id="rankAlliance" type="text">
+
+              <label>Power:</label>
+              <input id="rankPower" type="number">
+
+              <label>Merit:</label>
+              <input id="rankMerit" type="number">
+
+              <button class="btn-primary" onclick="addOrUpdateRank()">Simpan</button>
+              <button id="cancelRankEditBtn" class="btn-secondary hidden" onclick="cancelEditRank()">Batal Edit</button>
             </div>
-            <h4>Daftar Rank (Admin)</h4>
+
+            <h3>Daftar Ranking</h3>
             <div id="adminRankList"></div>
           </div>
-
-          <!-- Migrations manager -->
+          <!-- MIGRATIONS ADMIN -->
           <div id="admin-migrations" class="admin-panel hidden">
-            <h2>Manajemen Migrasi</h2>
+            <h2>✈️ Kelola Migrasi</h2>
+
             <div id="adminMigList"></div>
-            <div id="migEditCard" class="mig-edit-card hidden card">
-              <h4>Edit Pendaftar</h4>
-              <form onsubmit="event.preventDefault(); saveMigrationEdit();">
-                <input type="hidden" id="editMigId">
-                <label>Nama:</label><input id="editMigName">
-                <label>Server:</label><input id="editMigServer">
-                <label>Power:</label><input id="editMigPower" type="number">
-                <label>Kontak:</label><input id="editMigContact">
-                <button class="btn-primary">Simpan</button>
-                <button class="btn-secondary" onclick="cancelMigEdit()">Batal</button>
-              </form>
+
+            <div id="migEditCard" class="card hidden">
+              <h3>Edit Data Migrasi</h3>
+
+              <input type="hidden" id="editMigId">
+
+              <label>Nama:</label>
+              <input id="editMigName" type="text">
+
+              <label>Server:</label>
+              <input id="editMigServer" type="text">
+
+              <label>Power:</label>
+              <input id="editMigPower" type="number">
+
+              <label>Kontak:</label>
+              <input id="editMigContact" type="text">
+
+              <button class="btn-primary" onclick="saveMigrationEdit()">Simpan</button>
+              <button class="btn-secondary" onclick="cancelMigEdit()">Batal</button>
             </div>
           </div>
 
-          <!-- Files (wallpaper/logo/sound) -->
+          <!-- FILE UPLOAD ADMIN -->
           <div id="admin-files" class="admin-panel hidden">
-            <h2>Wallpaper & Logo</h2>
-            <div class="card">
-              <h4>Upload Wallpaper</h4>
-              <input type="file" id="bgInput" accept="image/*">
-              <button class="btn-primary" onclick="uploadBackground()">Upload Wallpaper</button>
-              <p>Preview:</p><img id="currentBgPreview" style="max-width:280px;border-radius:8px">
-            </div>
+            <h2>📁 Upload File & Tema</h2>
 
+            <!-- LOGO -->
             <div class="card">
-              <h4>Upload Logo</h4>
-              <input type="file" id="logoInput" accept="image/*">
+              <h3>Logo Website</h3>
+              <img id="currentLogo" class="preview-img" src="">
+              <input type="file" id="logoInput">
               <button class="btn-primary" onclick="uploadLogo()">Upload Logo</button>
-              <p>Logo saat ini:</p><img id="currentLogo" style="max-width:160px;border-radius:8px">
             </div>
 
+            <!-- WALLPAPER -->
             <div class="card">
-              <h4>War sound (klik)</h4>
-              <input type="file" id="soundInput" accept="audio/*">
+              <h3>Wallpaper Latar Belakang</h3>
+              <img id="currentBgPreview" class="preview-img" src="">
+              <input type="file" id="bgInput">
+              <button class="btn-primary" onclick="uploadBackground()">Upload Wallpaper</button>
+            </div>
+
+            <!-- SOUND -->
+            <div class="card">
+              <h3>War Sound</h3>
+              <label>Sound Aktif: <span id="currentSoundLabel">default</span></label>
+              <input type="file" id="soundInput">
               <button class="btn-primary" onclick="uploadWarSound()">Upload Sound</button>
-              <p>Sound saat ini: <span id="currentSoundLabel">default synth</span></p>
             </div>
           </div>
 
-          <!-- Admins manager -->
+          <!-- ADMIN EMAIL MANAGER -->
           <div id="admin-admins" class="admin-panel hidden">
-            <h2>Admins</h2>
+            <h2>👑 Kelola Admin</h2>
+
             <div class="card">
-              <form onsubmit="event.preventDefault(); addAdminEmail();">
-                <label>Tambah Email Admin:</label><input id="newAdminEmail" type="email" required>
-                <button class="btn-primary">Tambah</button>
-              </form>
+              <label>Tambah email admin:</label>
+              <input id="newAdminEmail" type="email">
+              <button class="btn-primary" onclick="addAdminEmail()">Tambah</button>
             </div>
-            <h4>Daftar Admin</h4>
+
+            <h3>Daftar Admin</h3>
             <div id="adminEmailsList"></div>
           </div>
 
-          <!-- Server & events -->
+          <!-- SERVER SETTINGS -->
           <div id="admin-server" class="admin-panel hidden">
-            <h2>Server & Event</h2>
+            <h2>🌐 Pengaturan Server</h2>
+
             <div class="card">
-              <h4>Status Event</h4>
-              <label>Nama:</label><input id="admEventName">
-              <label>Status:</label><input id="admEventStatus">
-              <label>Catatan:</label><textarea id="admEventNote"></textarea>
+              <h3>Status Event</h3>
+              <label>Nama Event:</label>
+              <input id="admEventName" type="text">
+
+              <label>Status:</label>
+              <input id="admEventStatus" type="text">
+
+              <label>Catatan:</label>
+              <textarea id="admEventNote"></textarea>
+
               <button class="btn-primary" onclick="saveEventStatus()">Simpan</button>
             </div>
 
             <div class="card">
-              <h4>Info Server</h4>
-              <label>Aliansi:</label><textarea id="admAllianceInfo"></textarea>
-              <label>Peraturan:</label><textarea id="admRulesInfo"></textarea>
+              <h3>Info Server</h3>
+              <label>Info Aliansi:</label>
+              <textarea id="admAllianceInfo"></textarea>
+
+              <label>Peraturan:</label>
+              <textarea id="admRulesInfo"></textarea>
+
               <button class="btn-primary" onclick="saveServerInfo()">Simpan</button>
             </div>
 
             <div class="card">
-              <h4>Status War & Migrasi</h4>
-              <label>War:</label><input id="admWarStatus">
-              <label>Migrasi:</label><input id="admMigStatus">
+              <h3>Status War & Migrasi</h3>
+
+              <label>Status War:</label>
+              <input id="admWarStatus" type="text">
+
+              <label>Status Migrasi:</label>
+              <input id="admMigStatus" type="text">
+
               <button class="btn-primary" onclick="saveMigrationStatus()">Simpan</button>
             </div>
 
             <div class="card">
-              <h4>Jadwal KvK</h4>
+              <h3>Jadwal KvK</h3>
               <textarea id="admKvkSchedule"></textarea>
               <button class="btn-primary" onclick="saveKvkSchedule()">Simpan</button>
             </div>
 
             <div class="card">
-              <h4>Nama Raja</h4>
-              <input id="admKingName"><button class="btn-primary" onclick="saveKingName()">Simpan</button>
+              <h3>Nama Raja</h3>
+              <input id="admKingName" type="text">
+              <button class="btn-primary" onclick="saveKingName()">Simpan</button>
             </div>
           </div>
 
-          <!-- Settings -->
+          <!-- APP SETTINGS -->
           <div id="admin-settings" class="admin-panel hidden">
-            <h2>Pengaturan</h2>
-            <div class="card">
-              <p>Beberapa pengaturan lanjutan akan tampil di sini.</p>
-            </div>
+            <h2>⚙️ Pengaturan Sistem</h2>
+            <p>Semua setting tersimpan otomatis melalui Firebase Realtime Database.</p>
           </div>
 
-        </div> <!-- admin-main -->
-      </div> <!-- admin-shell -->
+        </div><!-- END admin-content -->
+      </div><!-- END admin-wrapper -->
     </section>
-
   </main>
 
-  <footer class="footer">© 2025 AOEM 199 — By HADES</footer>
+  <footer class="footer">
+    © 2025 AOEM 199 — By HADES
+  </footer>
 
-  <!-- Firebase config (you provided) -->
+  <!-- Firebase Config -->
   <script>
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
     const firebaseConfig = {
       apiKey: "AIzaSyBZh7wfBvEbtm-55FKWtFc2P1G04Izp4sQ",
       authDomain: "aoem199.firebaseapp.com",
       databaseURL: "https://aoem199-default-rtdb.asia-southeast1.firebasedatabase.app",
       projectId: "aoem199",
-      storageBucket: "aoem199.firebasestorage.app",
+      storageBucket: "aoem199.appspot.com",
       messagingSenderId: "954949340074",
       appId: "1:954949340074:web:17a5342efdc216e213f9d3",
       measurementId: "G-GLTTPS0WET"
     };
   </script>
 
+  <!-- MAIN LOGIC -->
   <script src="script.js"></script>
+
 </body>
 </html>
